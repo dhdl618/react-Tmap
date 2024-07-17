@@ -146,6 +146,7 @@ const App = () => {
         zoom: 14,
         zoomControl: true,
         scrollwheel: true,
+        httpsMode: true
       });
 
       setMap(newMap);
