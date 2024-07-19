@@ -6,3 +6,28 @@
   /* margin-top: 100px; */
   z-index: 1;
 }
+
+
+/* 목적지 검색 */
+.poi-result-container {
+  margin: 10px;
+  border: 1px solid gray;
+  border-radius: 15px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.poi-result-container p {
+  margin: 5px;
+}
+
+.poi-name {
+  font-size: 18px;
+}
+
+.poi-addr {
+  font-size: 14px;
+  color: gray;
+  margin-left: 10px !important; 
+}

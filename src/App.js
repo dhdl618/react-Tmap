@@ -124,6 +124,8 @@ import React, { useState, useEffect, useRef } from "react";
 import redPoint from './img/redPoint_10.png';
 import bluePoint from './img/bluePoint_10.png';
 import './App.css';
+import SearchNav from "./SearchNav";
+
 
 const { Tmapv2 } = window;
 
@@ -142,7 +144,7 @@ const App = () => {
       const newMap = new Tmapv2.Map("map_div", {
         center: defaultLocation,
         width: "100vw",
-        height: "97vh",
+        height: "93vh",
         zoom: 14,
         zoomControl: true,
         scrollwheel: true,
@@ -210,12 +212,12 @@ const App = () => {
     }
   };
 
+
   return (
     <div>
+      <SearchNav />
       <div id="map_div" className="sh_map"></div>
       <button onClick={handleCurrentLocationClick} className="btn">현재 위치로 이동</button>
-      {map && (<button>map 존재</button>)}
-      {currentLocation && (<button>현재 위치 존재</button>)}
     </div>
   );
 };
