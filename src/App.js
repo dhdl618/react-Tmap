@@ -41,7 +41,7 @@
 
 //         getCurrentPosition(myLoc)
 //       });
-    
+
 //     const getCurrentPosition = (myLoc) =>{
 //       console.log("가져왔어", myLoc._lat, myLoc._lng)
 //       var marker_me = new Tmapv2.Marker({
@@ -115,110 +115,34 @@
 
 // export default App;
 
-
-
-
-
-
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
-import redPoint from './img/redPoint_10.png';
-import bluePoint from './img/bluePoint_10.png';
-import './App.css';
-import SearchNav from "./SearchNav";
+import "./App.css";
+import Main from './Main'
+import SearchResult from "./SearchResult";
 
-
-const { Tmapv2 } = window;
 
 const App = () => {
-  const [map, setMap] = useState(null);
-  const [marker, setMarker] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const mapRef = useRef(null);
+  
+  useEffect(()=> {
+    setScreenSize()
+  }, [])
 
-  // 지도 초기화 함수
-  const initMap = (lat, lng) => {
-    const mapDiv = document.getElementById("map_div");
+  const setScreenSize = () => {
+    let vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty("--vh", `${vh}px`)
 
-    if (!mapDiv.children.length) {
-      const defaultLocation = new Tmapv2.LatLng(lat, lng);
-      const newMap = new Tmapv2.Map("map_div", {
-        center: defaultLocation,
-        width: "100vw",
-        height: "93vh",
-        zoom: 14,
-        zoomControl: true,
-        scrollwheel: true,
-        httpsMode: true
-      });
-
-      setMap(newMap);
-      mapRef.current = newMap;
-
-      // 마커 초기화
-      const newMarker = new Tmapv2.Marker({
-        position: defaultLocation,
-        map: newMap,
-        icon: redPoint,
-      });
-      setMarker(newMarker);
-    }
-  };
-
-  // 마커 업데이트 함수
-  const updateMarker = (lat, lng) => {
-    const newLoc = new Tmapv2.LatLng(lat, lng);
-
-    if (marker) {
-      marker.setPosition(newLoc);
-    } else if (map) {
-      const newMarker = new Tmapv2.Marker({
-        position: newLoc,
-        map: map,
-        icon: redPoint,
-      });
-      setMarker(newMarker);
-    }
-
-    // map.setCenter(newLoc);
-  };
-
-  // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트
-  useEffect(() => {
-    const handleMessage = (e) => {
-      const myLocation = JSON.parse(e.data);
-      console.log("Received location:", myLocation);
-      const { lat, lng } = myLocation;
-      setCurrentLocation({ lat, lng });
-
-      if (!map) {
-        initMap(lat, lng);
-      } else {
-        updateMarker(lat, lng);
-      }
-    };
-
-    document.addEventListener("message", handleMessage);
-
-    // Cleanup listener on unmount
-    return () => {
-      document.removeEventListener("message", handleMessage);
-    };
-  }, [map, marker]);
-
-  // 현재 위치 버튼 클릭 핸들러
-  const handleCurrentLocationClick = () => {
-    if (currentLocation && map) {
-      map.setCenter(new Tmapv2.LatLng(currentLocation.lat, currentLocation.lng));
-    }
-  };
-
-
+    let vw = window.innerWidth * 0.01
+    document.documentElement.style.setProperty("--vw", `${vw}px`)
+  }
+  
   return (
-    <div>
-      <SearchNav />
-      <div id="map_div" className="sh_map"></div>
-      <button onClick={handleCurrentLocationClick} className="btn">현재 위치로 이동</button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/search-result" element={<SearchResult />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

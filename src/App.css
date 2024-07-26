@@ -1,33 +1,158 @@
-#sh_map {
-  
+* {
+  font-family: "Noto Sans KR", sans-serif !important;
 }
 
-.btn {
-  /* margin-top: 100px; */
+/* 너비, 높이 값 동적으로 계산 */
+:root {
+  --vh: 100%;
+  --vw: 100%;
+}
+
+/* SearchBar */
+.search-bar-container {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  top: 20px;
+  height: 40px;
   z-index: 1;
 }
-
-
-/* 목적지 검색 */
-.poi-result-container {
-  margin: 10px;
-  border: 1px solid gray;
-  border-radius: 15px;
+.search-input {
+  width: 220px;
+  border: 1.3px solid lightgray;
+  border-radius: 5px;
   padding-left: 10px;
+  padding-right: 45px;
+  outline: none;
+  font-size: 16px;
+  padding-top: 2px;
+  color: #5f5f5f;
+  font-weight: 400;
+}
+.search-input::placeholder {
+  color: #bdbdbd;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+.search-bar-container button {
+  border: none;
+  background-color: white;
+  width: 40px;
+  padding: 0px;
+  border-radius: 5px;
+}
+.search-bar-container button img {
+  margin-top: 4px;
+}
+.menu-btn {
+  background-color: #6cafff !important;
+  margin-right: 5px;
+  box-shadow: 1px 1px 4px #0000003d;
+}
+.menu-btn img {
+  padding-left: 1px;
+  width: 25px;
+  height: 25px;
+}
+.back-btn {
+  background-color: white !important;
+  margin-right: 5px;
+}
+.back-btn img {
+  padding-left: 1px;
+  width: 25px;
+  height: 25px;
+}
+.search-btn {
+  position: absolute;
+  top: 2px;
+  height: 36px;
+  left: 280px;
+}
+
+
+
+/* Main */
+.cur-loc-btn {
+  padding: 0px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0.7px 1px 4px rgba(0, 67, 122, 0.6);
+  position: absolute;
+  top: calc(var(--vh, 1vh) * 100 - 90px);
+  right: 40px;
+}
+.my-loc-img{
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+/* SearchResult */
+.loc-results {
+  position: absolute;
+  top: 90px;
+  text-align: center;
+}
+.poi-result-btn {
+  width: calc(var(--vw, 1vw) * 100 - 30px);
+  margin-top: 7px;
+  border: none;
+  border-bottom: 1.4px solid rgb(235, 235, 235);
+  padding-left: 10px;
+  padding-bottom: 7px;
+  background-color: white;
+}
+.poi-result-btn p {
+  letter-spacing: 0.4px;
+}
+.poi-result-btn-inner-div {
   display: flex;
   align-items: center;
 }
-
-.poi-result-container p {
-  margin: 5px;
-}
-
 .poi-name {
-  font-size: 18px;
+  font-size: 17px;
+  text-align: start;
+  font-weight: 500;
+  color: rgb(24, 24, 24);
+  margin-right: 5px !important;
+  margin: 2px;
 }
-
+.poi-explanation {
+  font-size: 12px;
+  color: rgb(165, 165, 165);
+  margin: 2px;
+  font-weight: 200;
+}
 .poi-addr {
   font-size: 14px;
-  color: gray;
-  margin-left: 10px !important; 
+  color: rgb(88, 88, 88);
+  text-align: start;
+  margin: 0px 0px 2px 0px;
+  font-weight: 400;
+}
+.no-result {
+  width: calc(var(--vw, 1vw) * 100);
+  margin-top: 130px;
+  color: rgb(190, 190, 190);
+  font-size: 17px;
+}
+.no-result:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -50px;
+  width: 70%;
+  border-bottom: 1.4px solid rgb(235, 235, 235);
 }
