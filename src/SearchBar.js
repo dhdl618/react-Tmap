@@ -6,7 +6,7 @@ import search_img from "./img/search_20.png"
 import { useNavigate } from "react-router-dom";
 
 
-const SearchBar = ({props}) => {
+const SearchBar = ({state, lat, lng}) => {
   // 검색창에 적은 값을 저장
   const [poiKeyword, setPoiKeyword] = useState("");
   
@@ -21,7 +21,10 @@ const SearchBar = ({props}) => {
       params: {
         version: "1",
         searchKeyword: poiKeyword,
-        count: "10",
+        count: "20",
+        page: "1",
+        centerLat: lat,  // 정확도 순이면서 현재 위치 기준으로 검색
+        centerLon: lng
       },
       headers: {
         Accept: "application/json",
@@ -61,7 +64,7 @@ const SearchBar = ({props}) => {
   return (
     <div>
       <div className="search-bar-container">
-        {props ? (
+        {state ? (
           <button className="back-btn" onClick={reloadMap}>
             <img src={back_img} />
           </button>

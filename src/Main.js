@@ -64,7 +64,7 @@ const Main = () => {
     }
   };
 
-  // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트
+  // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트 (지도 및 마커용)
   useEffect(() => {
     const handleMessage = (e) => {
       const myLocation = JSON.parse(e.data);
@@ -103,7 +103,7 @@ const Main = () => {
       <div id="map_div" className="sh_map"></div>
       <button className="cur-loc-btn" onClick={handleCurrentLocationClick}>
         <img className="my-loc-img" src={myLoc_img} /></button>
-      <SearchBar props={false}/>
+      <SearchBar state={false} lat={currentLocation?.lat} lng={currentLocation?.lng}/>
     </div>
   );
 };
