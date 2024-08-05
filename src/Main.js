@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 import "./App.css";
 import SearchBar from "./SearchBar";
@@ -20,12 +18,12 @@ const Main = () => {
 
   // 지도 초기화 함수
   const initMap = (lat, lng) => {
-    const mapDiv = document.getElementById("map_div");
+    const mapDiv = document.getElementById("main-map");
 
-    // id가 map_div인 요소에 자식이 없으면 Map 생성
+    // id가 main-map인 요소에 자식이 없으면 Map 생성
     if (!mapDiv.children.length) {
       const defaultLocation = new Tmapv2.LatLng(lat, lng);
-      const newMap = new Tmapv2.Map("map_div", {
+      const newMap = new Tmapv2.Map("main-map", {
         center: defaultLocation,
         width: "100vw",
         height: "100vh",
@@ -100,10 +98,10 @@ const Main = () => {
 
   return (
     <div>
-      <div id="map_div" className="sh_map"></div>
+      <div id="main-map"></div>
       <button className="cur-loc-btn" onClick={handleCurrentLocationClick}>
         <img className="my-loc-img" src={myLoc_img} /></button>
-      <SearchBar state={false} lat={currentLocation?.lat} lng={currentLocation?.lng}/>
+      <SearchBar state={false} lat={currentLocation?.lat} lng={currentLocation?.lng} />
     </div>
   );
 };

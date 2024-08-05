@@ -4,6 +4,7 @@ import SearchBar from './SearchBar';
 import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
 import loadingGIF from './img/loading.gif'
+import { useNavigate } from "react-router-dom";
 
 const SearchResult = () => {
     // useNavigate를 통해 보낸 porps 받는 useLocation
@@ -13,6 +14,7 @@ const SearchResult = () => {
     // 무한 스크롤을 위해 page 값을 상태 값으로 저장
     const [page, setPage] = useState(2);
 
+    // 현재 위치 정보를 저장하는 상태 값
     const [currentLocation, setCurrentLocation] = useState(null);
 
     // 검색 결과 리스트를 상태 값으로 저장하고 useLocation으로 받아온
@@ -27,6 +29,9 @@ const SearchResult = () => {
 
     // 무한 스크롤을 구현하기 위한 라이브러리
     const [ref, inView] = useInView();
+
+    // 페이지 이동을 위한 useNavigate
+    const nav = useNavigate()
 
     // 검색결과 출력 시, 페이지 상단으로 이동하고 상태 값들 초기화
     useEffect(() => {
@@ -110,20 +115,26 @@ const SearchResult = () => {
       
     };
 
+    const searchRouteResult = (poi) => {
+      // console.log("정보", poi)
+      nav(`/poi-route-result/${poiKeyword}`, {state: {poi}})
+    }
+
     return (
       <div>
         <div>
           <SearchBar state={true} lat={currentLocation?.lat} lng={currentLocation?.lng} />
         </div>
+        <div className="white-nav-bar" />
         <div>
           <div className="loc-results" id='poi-div'>
-            {poiArray === "no-result" ? (
+            {Array.isArray(poiArray) && poiArray.length === 0 ? (
               <div className="no-result">
                   <p>검색 결과가 없습니다</p>
               </div>
             ) : (
-              dataList.map((poi, index) => (
-                <button key={index} className="poi-result-btn">
+              dataList?.map((poi, index) => (
+                <button key={index} className="poi-result-btn" onClick={() => searchRouteResult(poi)}>
                   <div className="poi-result-btn-inner-div">
                     {poi.name.includes(poiKeyword) ? (
                       <p className="poi-name">
@@ -134,7 +145,7 @@ const SearchResult = () => {
                     ) : (
                       <p className="poi-name">{poi.name}</p>
                     )}
-                    <p className="poi-explanation">{poi.detailBizName}</p>
+                    <p className="poi-explanation">{poi.middleBizName}</p>
                   </div>
                   <p className="poi-addr">
                     {poi.upperAddrName} {poi.roadName} {poi.firstBuildNo}

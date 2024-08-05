@@ -120,6 +120,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Main from './Main'
 import SearchResult from "./SearchResult";
+import WalkingRouteResult from "./WalkingRouteResult";
 
 
 const App = () => {
@@ -140,7 +141,8 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/search-result" element={<SearchResult />} />
+        <Route path="/search-result/:keyword" element={<SearchResult />} />
+        <Route path="/poi-route-result/:keyword" element={<WalkingRouteResult />} />
       </Routes>
     </BrowserRouter>
   );
