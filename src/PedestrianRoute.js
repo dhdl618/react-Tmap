@@ -304,7 +304,7 @@ const PedestrianRoute = () => {
 
   const handleCurrentLocationClick = () => {
     myMap.setCenter(
-      new Tmapv2.LatLng(myCurrentLocation.lat - 0.0003, myCurrentLocation.lng)
+      new Tmapv2.LatLng(realTimeLocation.lat - 0.0003, realTimeLocation.lng)
     );
   };
 
