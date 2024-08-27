@@ -1,10 +1,10 @@
 import React, {useEffect, useState, useRef} from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import SearchBar from './SearchBar'
 
-import redMarker from "./img/red_marker_48.png"
+import redMarker_img from "./img/red_marker_48.png"
 import myLoc_img from "./img/my_location_50.png"
 import redPoint_img from "./img/redPoint_15.png"
 import loading_gif from './img/loading.gif'
@@ -19,8 +19,10 @@ const WalkingRouteResult = () => {
     const {state: {poi}} = useLocation()
     console.log("정보가져오기", poi)
 
+    const nav = useNavigate()
+  
     const [map, setMap] = useState(null)
-    const [myCurrentLocation, setMyCurrentLocation] = useState(null);
+    const [myCurrentLocation, setMyCurrentLocation] = useState(null)
     const [destinationMarker, setDestinationMarker] = useState(null)
     const [currentMarker, setCurrentMarker] = useState(null)
     const [distance, setDistance] = useState(null)
@@ -52,7 +54,7 @@ const WalkingRouteResult = () => {
               const newMarker = new Tmapv2.Marker({
                 position: destinationLocation,
                 map: newMap,
-                icon: redMarker,
+                icon: redMarker_img,
               });
 
               setDestinationMarker(newMarker)
@@ -100,7 +102,7 @@ const WalkingRouteResult = () => {
     }
   };
 
-  // 마커 업데이트 함수
+  // 내 위치 포인트 업데이트 함수
   const updateMarker = (lat, lng) => {
     const newLoc = new Tmapv2.LatLng(lat, lng);
 
@@ -155,6 +157,12 @@ const WalkingRouteResult = () => {
           document.removeEventListener("message", handleMessage);
         };
       }, [myCurrentLocation]);
+
+      const goPedestrianRoute = (e) => {
+        if(myCurrentLocation) {
+          nav('/pedestrian-route', {state : {myCurrentLocation, poi}})
+        }
+      }
 
   return (
     <div className="route-result-main-div">
@@ -226,12 +234,11 @@ const WalkingRouteResult = () => {
                   <p>293m</p>
                 </div>
                 <div className='depart-desti-btn-div'>
-                  <button><p>출발</p></button>
-                  <button><p>도착</p></button>
+                  <button onClick={goPedestrianRoute} value="end"><p>목적지 설정</p></button>
                 </div>
               </div>
             </div>
-            <div></div>
+            {/* <div></div> */}
           </div>
         )}
       </div>

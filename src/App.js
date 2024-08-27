@@ -121,6 +121,8 @@ import "./App.css";
 import Main from './Main'
 import SearchResult from "./SearchResult";
 import WalkingRouteResult from "./WalkingRouteResult";
+import PedestrianRoute from "./PedestrianRoute";
+import StartEndInput from "./StartEndInput";
 
 
 const App = () => {
@@ -143,6 +145,7 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route path="/search-result/:keyword" element={<SearchResult />} />
         <Route path="/poi-route-result/:keyword" element={<WalkingRouteResult />} />
+        <Route path="/pedestrian-route" element={<PedestrianRoute />} />
       </Routes>
     </BrowserRouter>
   );
