@@ -7,6 +7,7 @@ import loadingGIF from './img/loading.gif'
 import { useNavigate } from "react-router-dom";
 
 const SearchResult = () => {
+  const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY
     // useNavigate를 통해 보낸 porps 받는 useLocation
     // 검색 결과와 키워드를 props로 받아서 렌더링 처리
     const {state: {poiArray, poiKeyword}} = useLocation();
@@ -84,11 +85,12 @@ const SearchResult = () => {
               page: page,
               count: "20",
               centerLat: currentLocation?.lat,  // 정확도 순이면서 현재 위치 기준으로 검색
-              centerLon: currentLocation?.lng
+              centerLon: currentLocation?.lng,
+              multiPoint: "Y"
             },
             headers: {
               Accept: "application/json",
-              appKey: "pboZppgQ8U4d6HG9FcdfX5KABc9DMuC5bDO7Ot98",
+              appKey: TMAP_API_KEY,
             },
           };
   

@@ -12,10 +12,13 @@ import upArrow_img from './img/up_arrow_48.png'
 import downArrow_img from './img/down_arrow_48.png'
 import call_img from './img/call_64.png'
 
+
 // Tmap API를 사용
 const { Tmapv2 } = window;
 
 const WalkingRouteResult = () => {
+    const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY
+
     const {state: {poi}} = useLocation()
     console.log("정보가져오기", poi)
 
@@ -61,7 +64,7 @@ const WalkingRouteResult = () => {
         }
     }
 
-    // 직선거리 구하는 함수
+    // 직선거리 구하는 함수 - 사용 x
     const distanceToDestination = async () => {
       console.log("안뜨나?",fixLocation)
         try {
@@ -77,7 +80,7 @@ const WalkingRouteResult = () => {
               },
               headers: {
                 Accept: "application/json",
-                appKey: "pboZppgQ8U4d6HG9FcdfX5KABc9DMuC5bDO7Ot98",
+                appKey: TMAP_API_KEY,
               },
             };
     
@@ -231,7 +234,7 @@ const WalkingRouteResult = () => {
                       ? (distance / 1000).toFixed(1) + "km"
                       : distance + "m"}
                   </p> */}
-                  <p>293m</p>
+                  {/* <p>293m</p> */}
                 </div>
                 <div className='depart-desti-btn-div'>
                   <button onClick={goPedestrianRoute} value="end"><p>목적지 설정</p></button>

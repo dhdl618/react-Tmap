@@ -6,8 +6,9 @@ import menu_img from "./img/menu_50.png"
 import back_img from "./img/back_20.png"
 import search_img from "./img/search_20.png"
 
-
 const SearchBar = ({state, lat, lng}) => {
+  const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
+  
   // 검색창에 적은 값을 저장
   const [poiKeyword, setPoiKeyword] = useState("");
 
@@ -32,7 +33,7 @@ const SearchBar = ({state, lat, lng}) => {
       },
       headers: {
         Accept: "application/json",
-        appKey: "pboZppgQ8U4d6HG9FcdfX5KABc9DMuC5bDO7Ot98",
+        appKey: TMAP_API_KEY,
       },
     };
     axios

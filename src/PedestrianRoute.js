@@ -13,6 +13,8 @@ import redPoint_img from "./img/redPoint_15.png";
 const { Tmapv2 } = window;
 
 const PedestrianRoute = () => {
+  const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
+
   const {
     state: { myCurrentLocation, poi },
   } = useLocation();
@@ -21,10 +23,10 @@ const PedestrianRoute = () => {
   const [eMarker, setEMarker] = useState(null);
   // const [routeData, setRouteData] = useState(null);
   const shortRouteRef = useRef(null);
-  const safeRouteRef = useRef(null)
+  const safeRouteRef = useRef(null);
 
   const [shortRoute, setShortRoute] = useState(null);
-  const [safeRoute, setSafeRoute] = useState(null)
+  const [safeRoute, setSafeRoute] = useState(null);
   // 최단경로, 안심경로 거리 값 저장
   const [shortDistance, setShortDistance] = useState(null);
   const [safeDistance, setSafeDistance] = useState(null);
@@ -37,8 +39,8 @@ const PedestrianRoute = () => {
   // 현재 위치 마커
   const [realTimeMarker, setRealTimeMarker] = useState(null);
 
-  const [shortLine, setShortLine] = useState(null)
-  const [safeLine, setSafeLine] = useState(null)
+  const [shortLine, setShortLine] = useState(null);
+  const [safeLine, setSafeLine] = useState(null);
 
   const nav = useNavigate();
 
@@ -47,8 +49,8 @@ const PedestrianRoute = () => {
       // if (!shortRoute) {
       fetchShortRoute();
       // }
-    } else if(isShortOrSafe === 'safe') {
-      fetchSafeRoute()
+    } else if (isShortOrSafe === "safe") {
+      fetchSafeRoute();
     }
   }, [isShortOrSafe, shortRoute, safeRoute]);
 
@@ -74,7 +76,7 @@ const PedestrianRoute = () => {
       const newMap = new Tmapv2.Map("route-map-div", {
         center: centerCoord,
         width: "100vw",
-        height: "85vh",
+        height: "84vh",
         zoom: 15,
         zoomControl: true,
         scrollwheel: true,
@@ -95,9 +97,9 @@ const PedestrianRoute = () => {
 
       const margin = {
         left: 70,
-        top: 70,
+        top: 300,
         right: 70,
-        bottom: 70,
+        bottom: 250,
       };
 
       setMyMap(newMap);
@@ -134,13 +136,12 @@ const PedestrianRoute = () => {
 
   const fetchShortRoute = async () => {
     if (shortRouteRef.current) {
-      
       handleResponse(shortRouteRef.current, "short");
-      alert("short Route: api 호출 안해")
+      // alert("short Route: api 호출 안해")
     } else {
       try {
-        alert("short Route: api 호출 계속 해")
-        const headers = { appKey: "pboZppgQ8U4d6HG9FcdfX5KABc9DMuC5bDO7Ot98" };
+        // alert("short Route: api 호출 계속 해")
+        const headers = { appKey: TMAP_API_KEY };
         const response = await axios.post(
           "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
           {
@@ -181,18 +182,17 @@ const PedestrianRoute = () => {
   const fetchSafeRoute = async () => {
     // alert("safe route 준비중")
     if (safeRouteRef.current) {
-      
       handleResponse(safeRouteRef.current, "safe");
-      alert("safe Route: api 호출 안해")
+      // alert("safe Route: api 호출 안해")
     } else {
       try {
-        alert("safe Route: api 호출 계속 해")
-        const headers = { appKey: "pboZppgQ8U4d6HG9FcdfX5KABc9DMuC5bDO7Ot98" };
+        // alert("safe Route: api 호출 계속 해")
+        const headers = { appKey: TMAP_API_KEY };
         const response = await axios.post(
           "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
           {
-            startX: 127.2671513,
-            startY: 37.0156905,
+            startX: 127.0895584,   // 양주 디에트르 아파트 기준 (테스트)
+            startY: 37.829882,
             endX: poi.noorLon,
             endY: poi.noorLat,
             startName: "출발지",
@@ -223,7 +223,7 @@ const PedestrianRoute = () => {
         alert(error);
       }
     }
-  }
+  };
 
   // 받아온 데이터를 이용해서 경로 그리기 위한 값 추출
   const handleResponse = (resultData, routeType) => {
@@ -242,9 +242,9 @@ const PedestrianRoute = () => {
     });
 
     if (routeType === "short") {
-      safeLine?.setMap(null)
+      safeLine?.setMap(null);
     } else if (routeType === "safe") {
-      shortLine?.setMap(null)
+      shortLine?.setMap(null);
     }
 
     // if ((!shortLine && routeType === "short") || (!safeLine && routeType === "safe")) {
@@ -262,7 +262,7 @@ const PedestrianRoute = () => {
     } else if (routeType === "safe") {
       setSafeLine(polyline_);
     }
-  // }
+    // }
 
     // drawLine(drawInfoArr);
   };
@@ -276,7 +276,6 @@ const PedestrianRoute = () => {
   //       map: myMap,
   //     });
 
-      
   //     // polyline_.setMap(null)
 
   //     // resultdrawArr.current.push(polyline_);
@@ -297,7 +296,7 @@ const PedestrianRoute = () => {
     setIsNavigating(true);
 
     myMap.setCenter(
-      new Tmapv2.LatLng(myCurrentLocation.lat, myCurrentLocation.lng)
+      new Tmapv2.LatLng(myCurrentLocation.lat - 0.0003, myCurrentLocation.lng)
     );
 
     myMap.setZoom(18);
@@ -305,7 +304,7 @@ const PedestrianRoute = () => {
 
   const handleCurrentLocationClick = () => {
     myMap.setCenter(
-      new Tmapv2.LatLng(myCurrentLocation.lat, myCurrentLocation.lng)
+      new Tmapv2.LatLng(myCurrentLocation.lat - 0.0003, myCurrentLocation.lng)
     );
   };
 
@@ -362,12 +361,56 @@ const PedestrianRoute = () => {
           <img className="my-loc-img" src={myLoc_img} />
         </button>
       )}
+      <div className="destination-name-div">
+        <p>도착지: {poi.name}</p>
+      </div>
+      {!isNavigating && (
+        <div className="choice-route-div">
+          <div
+            className={
+              (isShortOrSafe === "short" ? "selected-" : "") +
+              "choice-route-div-div"
+            }
+            onClick={shortOrSafeSelected}
+            data-info="short"
+          >
+            <p style={{ fontSize: "15px" }}>최단 경로</p>
+            <p
+              className={
+                (isShortOrSafe === "short" ? "selected-" : "") +
+                "choice-route-div-div-distance"
+              }
+            >
+              {shortDistance}
+            </p>
+          </div>
+          <div
+            className={
+              (isShortOrSafe === "safe" ? "selected-" : "") +
+              "choice-route-div-div"
+            }
+            onClick={shortOrSafeSelected}
+            data-info="safe"
+          >
+            <p style={{ fontSize: "15px" }}>안심 경로</p>
+            <p
+              className={
+                (isShortOrSafe === "safe" ? "selected-" : "") +
+                "choice-route-div-div-distance"
+              }
+            >
+              {safeDistance}
+            </p>
+          </div>
+        </div>
+      )}
+
       <div>
         <button className="x-btn" onClick={reloadMap}>
           <img src={x_img} />
         </button>
       </div>
-      <div style={{ position: "relative" }}>
+      <div>
         {isNavigating ? (
           <div className="is-navigation-div">
             {isShortOrSafe == "short" ? (
@@ -379,35 +422,9 @@ const PedestrianRoute = () => {
           </div>
         ) : (
           <>
-            <div className="choice-route-div">
-              <div
-                className={
-                  isShortOrSafe == "short"
-                    ? "selected-choice-route-div-div"
-                    : "choice-route-div-div"
-                }
-                onClick={shortOrSafeSelected}
-                data-info="short"
-              >
-                <p>{shortDistance}</p>
-                <p style={{ fontSize: "18px" }}>최단 경로</p>
-              </div>
-              <div
-                className={
-                  isShortOrSafe == "safe"
-                    ? "selected-choice-route-div-div"
-                    : "choice-route-div-div"
-                }
-                onClick={shortOrSafeSelected}
-                data-info="safe"
-              >
-                <p>{safeDistance}</p>
-                <p style={{ fontSize: "18px" }}>안심 경로</p>
-              </div>
-            </div>
             <div className="select-route-div">
               <button onClick={startNavigation}>
-                <p>안내시작</p>
+                <p>경로 안내 시작</p>
               </button>
             </div>
           </>
