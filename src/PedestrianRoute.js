@@ -42,13 +42,17 @@ const PedestrianRoute = () => {
   const [shortLine, setShortLine] = useState(null);
   const [safeLine, setSafeLine] = useState(null);
 
+  // 안심경로 두 좌표 값 저장
+  const [safeCoords1, setSafeCoords1] = useState(null);
+  const [safeCoords2, setSafeCoords2] = useState(null);
+  // 중간지점 좌표 값 저장
+  const [centerCoords, setCenterCoords] = useState(null);
+
   const nav = useNavigate();
 
   useEffect(() => {
     if (isShortOrSafe === "short") {
-      // if (!shortRoute) {
       fetchShortRoute();
-      // }
     } else if (isShortOrSafe === "safe") {
       fetchSafeRoute();
     }
@@ -134,13 +138,12 @@ const PedestrianRoute = () => {
   // 보행자 경로 안내 데이터 및 경로 그리기
   const resultdrawArr = useRef([]);
 
+  // 최단 경로 API 요청
   const fetchShortRoute = async () => {
     if (shortRouteRef.current) {
       handleResponse(shortRouteRef.current, "short");
-      // alert("short Route: api 호출 안해")
     } else {
       try {
-        // alert("short Route: api 호출 계속 해")
         const headers = { appKey: TMAP_API_KEY };
         const response = await axios.post(
           "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
@@ -160,10 +163,11 @@ const PedestrianRoute = () => {
 
         shortRouteRef.current = resultData;
         setShortRoute(resultData);
-        // alert(routeData.current);
 
+        // 응답 값을 인자로 보냄
         handleResponse(resultData, "short");
 
+        // 거리 계산
         let distance = resultData[0].properties.totalDistance;
         if (distance >= 1000) {
           distance = (distance / 1000).toFixed(1) + "km";
@@ -172,58 +176,186 @@ const PedestrianRoute = () => {
         }
 
         setShortDistance(distance);
-      } catch (error) {
-        console.error("Error fetching route:", error);
-        alert(error);
+      } catch (e) {
+        alert("fetchShortRoute 에서 알림: " + e);
       }
     }
   };
 
-  const fetchSafeRoute = async () => {
-    // alert("safe route 준비중")
+  const fetchSafeRoute = () => {
     if (safeRouteRef.current) {
       handleResponse(safeRouteRef.current, "safe");
-      // alert("safe Route: api 호출 안해")
     } else {
-      try {
-        // alert("safe Route: api 호출 계속 해")
-        const headers = { appKey: TMAP_API_KEY };
-        const response = await axios.post(
-          "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
-          {
-            startX: 127.0895584,   // 양주 디에트르 아파트 기준 (테스트)
-            startY: 37.829882,
-            endX: poi.noorLon,
-            endY: poi.noorLat,
-            startName: "출발지",
-            endName: "도착지",
-          },
-          { headers }
-        );
-
-        // 받아온 데이터
-        const resultData = response?.data.features;
-
-        safeRouteRef.current = resultData;
-        setSafeRoute(resultData);
-        // alert(routeData.current);
-
-        handleResponse(resultData, "safe");
-
-        let distance = resultData[0].properties.totalDistance;
-        if (distance >= 1000) {
-          distance = (distance / 1000).toFixed(1) + "km";
-        } else {
-          distance = distance + "m";
-        }
-
-        setSafeDistance(distance);
-      } catch (error) {
-        console.error("Error fetching route:", error);
-        alert(error);
-      }
+      
     }
   };
+
+  //***********************오늘추가*************************
+  useEffect(() => {
+    if (centerCoords) {
+      reqCctvRoute1();
+      reqCctvRoute2();
+    }
+  }, [centerCoords]);
+
+  const reqCctvRoute1 = async () => {
+    try {
+      const options = {
+        method: "GET",
+        url: "http://10.0.2.2:8080/cctv",
+        params: {
+          startLat: myCurrentLocation?.lat, // 출발지
+          startLon: myCurrentLocation?.lng, // 출발지
+          endLat: centerCoords?.lat, // 중간지점
+          endLon: centerCoords?.lng, // 중간지점
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const res = await axios.request(options);
+
+      // alert(res?.data)
+
+      setSafeCoords1({ lat: res?.data[0].latitude, lng: res?.data[0].longitude });
+      
+    } catch (e) {
+      alert("reqCctvRoute1 에서 알림: " + e);
+      console.log(e);
+    }
+  };
+
+  const reqCctvRoute2 = async () => {
+    try {
+      const options = {
+        method: "GET",
+        url: "http://10.0.2.2:8080/cctv",
+        params: {
+          startLat: centerCoords?.lat, // 중간지점
+          startLon: centerCoords?.lng, // 중간지점
+          endLat: poi?.noorLat, // 도착점
+          endLon: poi?.noorLon, // 도착점
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const res = await axios.request(options);
+
+      setSafeCoords2({ lat: res?.data[0].latitude, lng: res?.data[0].longitude });
+      
+    } catch (e) {
+      alert("reqCctvRoute2 에서 알림: " + e);
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if (safeCoords1 && safeCoords2 && centerCoords) {
+      reqSafeRoute();
+    }
+  }, [safeCoords1, safeCoords2, centerCoords]);
+
+  const reqSafeRoute = async () => {
+    try {
+      const headers = { appKey: TMAP_API_KEY };
+      
+      const response1 = await axios.post(
+        "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+        {
+          startX: myCurrentLocation?.lng,
+          startY: myCurrentLocation?.lat,
+          endX: safeCoords1?.lng,
+          endY: safeCoords1?.lat,
+          startName: "출발지",
+          endName: "도착지",
+        },
+        { headers }
+      );
+
+      const response2 = await axios.post(
+        "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+        {
+          startX: safeCoords1?.lng,
+          startY: safeCoords1?.lat,
+          endX: centerCoords?.lng,
+          endY: centerCoords?.lat,
+          startName: "출발지",
+          endName: "도착지",
+        },
+        { headers }
+      );
+
+      const response3 = await axios.post(
+        "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+        {
+          startX: centerCoords?.lng,
+          startY: centerCoords?.lat,
+          endX: safeCoords2?.lng,
+          endY: safeCoords2?.lat,
+          startName: "출발지",
+          endName: "도착지",
+        },
+        { headers }
+      );
+
+      const response4 = await axios.post(
+        "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+        {
+          startX: safeCoords2?.lng,
+          startY: safeCoords2?.lat,
+          endX: poi?.noorLon,
+          endY: poi?.noorLat,
+          startName: "출발지",
+          endName: "도착지",
+        },
+        { headers }
+      );
+
+      // 받아온 데이터 하나의 배열에 저장 (폴리라인 그리기 위함)
+      const combineResponse = [
+        ...response1?.data.features,
+        ...response2?.data.features,
+        ...response3?.data.features,
+        ...response4?.data.features,
+      ];
+
+      // 각각의 0번째 값에 총 거리 값이 저장되어 있기 때문에 거리 합치기 위한 코드
+      const safeDistance1 =
+        response1?.data.features[0].properties.totalDistance;
+      const safeDistance2 =
+        response2?.data.features[0].properties.totalDistance;
+      const safeDistance3 =
+        response3?.data.features[0].properties.totalDistance;
+      const safeDistance4 =
+        response4?.data.features[0].properties.totalDistance;
+      const safeTotalDistance =
+        safeDistance1 + safeDistance2 + safeDistance3 + safeDistance4;
+
+      console.log("데이터가 어떤형식?", combineResponse);
+
+      safeRouteRef.current = combineResponse
+      setSafeRoute(combineResponse);
+
+      // 합친 데이터를 함수 인자로 보냄
+      handleResponse(combineResponse, "safe");
+
+      // 합친 총 길이를 계산
+      let distance = safeTotalDistance;
+      if (distance >= 1000) {
+        distance = (distance / 1000).toFixed(1) + "km";
+      } else {
+        distance = distance + "m";
+      }
+
+      setSafeDistance(distance);
+    } catch (e) {
+      alert("reqSafeRoute 에서 알림: " + e);
+    }
+  };
+  //*******************************************************
 
   // 받아온 데이터를 이용해서 경로 그리기 위한 값 추출
   const handleResponse = (resultData, routeType) => {
@@ -241,6 +373,23 @@ const PedestrianRoute = () => {
       }
     });
 
+    //***********************오늘추가*************************
+    // 처음 로딩 때 최단 경로에서 보낸 데이터를 이용해서 중앙 좌표값 구하기
+    if (!centerCoords) {
+      console.log("drawInfo 배열 데이터 확인", drawInfoArr);
+      console.log("drawInfo 배열 길이", drawInfoArr.length);
+
+      const halfDataLength = Math.ceil(drawInfoArr.length / 2);
+
+      const cenLat = drawInfoArr[halfDataLength]._lat;
+      const cenLng = drawInfoArr[halfDataLength]._lng;
+
+      setCenterCoords({ lat: cenLat, lng: cenLng });
+
+      console.log("길이의 반", halfDataLength);
+    }
+    //*******************************************************
+
     if (routeType === "short") {
       safeLine?.setMap(null);
     } else if (routeType === "safe") {
@@ -250,7 +399,7 @@ const PedestrianRoute = () => {
     // if ((!shortLine && routeType === "short") || (!safeLine && routeType === "safe")) {
     const polyline_ = new Tmapv2.Polyline({
       path: drawInfoArr,
-      strokeColor: "#dd0000",
+      strokeColor: isShortOrSafe === "short" ? "#dd0000" : "#008000",
       strokeWeight: 6,
       map: myMap,
       outline: true,
@@ -262,30 +411,12 @@ const PedestrianRoute = () => {
     } else if (routeType === "safe") {
       setSafeLine(polyline_);
     }
-    // }
-
-    // drawLine(drawInfoArr);
   };
-
-  // 경로 그리기
-  // const drawLine = (arrPoint) => {
-  //     const polyline_ = new Tmapv2.Polyline({
-  //       path: arrPoint,
-  //       strokeColor: "#6cafff",
-  //       strokeWeight: 6,
-  //       map: myMap,
-  //     });
-
-  //     // polyline_.setMap(null)
-
-  //     // resultdrawArr.current.push(polyline_);
-  // };
 
   const shortOrSafeSelected = (e) => {
     const selectedRoute = e.currentTarget.getAttribute("data-info");
-    // alert(selectedRoute)
 
-    if (selectedRoute == "short") {
+    if (selectedRoute === "short") {
       setIsShortOrSafe("short");
     } else {
       setIsShortOrSafe("safe");
@@ -313,7 +444,7 @@ const PedestrianRoute = () => {
     if (isNavigating) {
       const handleMessage = (e) => {
         const myLocation = JSON.parse(e.data);
-        // alert(myLocation);
+        
         const { lat, lng } = myLocation;
         setRealTimeLocation({ lat, lng });
       };

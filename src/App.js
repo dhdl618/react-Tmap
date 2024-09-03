@@ -122,6 +122,7 @@ import Main from './Main'
 import SearchResult from "./SearchResult";
 import WalkingRouteResult from "./WalkingRouteResult";
 import PedestrianRoute from "./PedestrianRoute";
+import SafeRouteCode from "./SafeRouteCode";
 
 
 const App = () => {
