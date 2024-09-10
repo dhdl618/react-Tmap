@@ -123,6 +123,7 @@ import SearchResult from "./SearchResult";
 import WalkingRouteResult from "./WalkingRouteResult";
 import PedestrianRoute from "./PedestrianRoute";
 import SafeRouteCode from "./SafeRouteCode";
+import AIguide from "./AIguide";
 
 
 const App = () => {
@@ -146,6 +147,7 @@ const App = () => {
         <Route path="/search-result/:keyword" element={<SearchResult />} />
         <Route path="/poi-route-result/:keyword" element={<WalkingRouteResult />} />
         <Route path="/pedestrian-route" element={<PedestrianRoute />} />
+        <Route path="/ai-guide" element={<AIguide />} />
       </Routes>
     </BrowserRouter>
   );

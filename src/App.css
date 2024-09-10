@@ -495,3 +495,146 @@
   right: 40px;
   z-index: 10;
 }
+
+
+/* AIguide */
+.ai-container {
+  /* width: calc(var(--vw, 1vw) * 100); */
+  /* height: calc(var(--vh, 1vh) * 100); */
+}
+
+.ai-title {
+  height: 60px;
+  border-bottom: 2px solid rgb(220, 220, 220);
+  box-shadow: 0px 0px 5px rgb(200, 200, 200);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.ai-title p {
+  margin: 0px;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.ai-body {
+  margin: 0px 30px;
+}
+
+.ai-des-location {
+  margin-top: 20px;
+  border: none;
+  border-radius: 18px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e6eff7;
+}
+
+.ai-des-location p {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgb(50, 50, 50);
+}
+
+.ai-text-area {
+  margin-top: 30px;
+  height: calc(var(--vh, 1vh) * 65);
+  overflow: auto;
+}
+/* 스크롤바 display none */
+::-webkit-scrollbar {display: none}
+
+.ai-req-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: calc(var(--vw, 1vw) * 10);
+}
+
+.ai-req-area {
+  background-color: rgb(50, 50, 50);
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 20px 30px 20px 20px;
+}
+.ai-req-area p {
+  margin: 0px;
+  color: white;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  font-weight: 300;
+}
+
+.ai-res-container {
+  margin-right: calc(var(--vw, 1vw) * 10);
+  margin-top: 30px;
+}
+
+.ai-res-area {
+  background-color: #6cafff;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 20px 20px 20px 30px;
+}
+.ai-res-area p {
+  margin: 0px;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  color: rgb(50, 50, 50);
+}
+
+.ai-end-btn-area {
+  position: absolute;
+  top: calc(var(--vh, 1vh) * 90);
+  left: 50%;
+  transform: translateX(-50%)
+}
+
+.ai-end-btn {
+  background-color: #6cafff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+}
+.ai-end-btn p {
+  margin: 0px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+.modal-bg {
+  background-color: rgba(0, 0, 0, 0.25);
+  width: calc(var(--vw, 1vw) * 100);
+  height: calc(var(--vh, 1vh) * 100);
+  position: absolute;
+  top: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-inner {
+  background-color: white;
+  text-align: center;
+  padding: 25px 23px;
+  border-radius: 20px;
+}
+.modal-inner p {
+  margin: 0px;
+  font-size: 14px;
+}
+.modal-inner button {
+  border: none;
+  border-radius: 7px;
+  width: 40%;
+  height: 38px;
+}

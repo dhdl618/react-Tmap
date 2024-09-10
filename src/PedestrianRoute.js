@@ -10,6 +10,8 @@ import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_15.png";
 
+import AiModal from "./AiModal";
+
 const { Tmapv2 } = window;
 
 const PedestrianRoute = () => {
@@ -47,6 +49,8 @@ const PedestrianRoute = () => {
   const [safeCoords2, setSafeCoords2] = useState(null);
   // 중간지점 좌표 값 저장
   const [centerCoords, setCenterCoords] = useState(null);
+
+  const [isArrived, setIsArrived] = useState(false)
 
   const nav = useNavigate();
 
@@ -221,7 +225,7 @@ const PedestrianRoute = () => {
       setSafeCoords1({ lat: res?.data[0].latitude, lng: res?.data[0].longitude });
       
     } catch (e) {
-      alert("reqCctvRoute1 에서 알림: " + e);
+      // alert("reqCctvRoute1 에서 알림: " + e);
       console.log(e);
     }
   };
@@ -247,7 +251,7 @@ const PedestrianRoute = () => {
       setSafeCoords2({ lat: res?.data[0].latitude, lng: res?.data[0].longitude });
       
     } catch (e) {
-      alert("reqCctvRoute2 에서 알림: " + e);
+      // alert("reqCctvRoute2 에서 알림: " + e);
       console.log(e);
     }
   };
@@ -481,6 +485,24 @@ const PedestrianRoute = () => {
   }, [realTimeLocation]);
   //*************************************************
 
+  useEffect(()=> {
+    // 목적지 주변에 대한 경위도 차이 값
+    const locDiff = 0.00015
+    
+    // 목적지 기준 0.00015 만큼의 +/- 위도
+    const lat_diff_minus = Number(poi.noorLat) - locDiff
+    const lat_diff_plus = Number(poi.noorLat) + locDiff
+
+    // 목적지 기준 0.00015 만큼의 +/- 경도
+    const lng_diff_minus = Number(poi.noorLon) - locDiff
+    const lng_diff_plus = Number(poi.noorLon) + locDiff
+
+    if((realTimeLocation?.lat >= lat_diff_minus && realTimeLocation?.lat <= lat_diff_plus) && (realTimeLocation?.lng >= lng_diff_minus && realTimeLocation?.lng <= lng_diff_plus)) {
+      setIsArrived(true)
+    }
+
+  }, [realTimeLocation])
+
   return (
     <div className="pedestrian-route-main-container">
       <div id="route-map-div"></div>
@@ -561,6 +583,7 @@ const PedestrianRoute = () => {
           </>
         )}
       </div>
+      {isArrived && <AiModal />}
     </div>
   );
 };
