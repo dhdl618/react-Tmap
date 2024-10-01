@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar";
 
 import redPoint_img from "./img/redPoint_15.png";
 import myLoc_img from "./img/my_location_50.png"
+import dovi_gif from "./img/dovi.gif"
 
 // Tmap API를 사용
 const { Tmapv2 } = window;

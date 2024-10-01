@@ -9,6 +9,7 @@ import x_img from "./img/white_x_48.png";
 import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_15.png";
+import camera_img from "./img/cctv_19.png"
 
 import AiModal from "./AiModal";
 
@@ -26,6 +27,9 @@ const PedestrianRoute = () => {
   // const [routeData, setRouteData] = useState(null);
   const shortRouteRef = useRef(null);
   const safeRouteRef = useRef(null);
+  // CCTV 마커 표시
+  const [cctv1Marker, setCctv1Marker] = useState(null)
+  const [cctv2Marker, setCctv2Marker] = useState(null) 
 
   const [shortRoute, setShortRoute] = useState(null);
   const [safeRoute, setSafeRoute] = useState(null);
@@ -181,7 +185,7 @@ const PedestrianRoute = () => {
 
         setShortDistance(distance);
       } catch (e) {
-        alert("fetchShortRoute 에서 알림: " + e);
+        // alert("fetchShortRoute 에서 알림: " + e);
       }
     }
   };
@@ -259,6 +263,26 @@ const PedestrianRoute = () => {
   useEffect(() => {
     if (safeCoords1 && safeCoords2 && centerCoords) {
       reqSafeRoute();
+
+      const cctvCamera1 = new Tmapv2.Marker({
+        position: new Tmapv2.LatLng(
+          safeCoords1?.lat,
+          safeCoords1?.lng
+        ),
+        map: myMap,
+        icon: camera_img,
+      });
+      setCctv1Marker(cctvCamera1)
+
+      const cctvCamera2 = new Tmapv2.Marker({
+        position: new Tmapv2.LatLng(
+          safeCoords2?.lat,
+          safeCoords2?.lng
+        ),
+        map: myMap,
+        icon: camera_img,
+      });
+      setCctv2Marker(cctvCamera2)
     }
   }, [safeCoords1, safeCoords2, centerCoords]);
 
@@ -279,24 +303,24 @@ const PedestrianRoute = () => {
         { headers }
       );
 
-      const response2 = await axios.post(
-        "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
-        {
-          startX: safeCoords1?.lng,
-          startY: safeCoords1?.lat,
-          endX: centerCoords?.lng,
-          endY: centerCoords?.lat,
-          startName: "출발지",
-          endName: "도착지",
-        },
-        { headers }
-      );
+      // const response2 = await axios.post(
+      //   "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+      //   {
+      //     startX: safeCoords1?.lng,
+      //     startY: safeCoords1?.lat,
+      //     endX: centerCoords?.lng,
+      //     endY: centerCoords?.lat,
+      //     startName: "출발지",
+      //     endName: "도착지",
+      //   },
+      //   { headers }
+      // );
 
       const response3 = await axios.post(
         "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
         {
-          startX: centerCoords?.lng,
-          startY: centerCoords?.lat,
+          startX: safeCoords1?.lng,
+          startY: safeCoords1?.lat,
           endX: safeCoords2?.lng,
           endY: safeCoords2?.lat,
           startName: "출발지",
@@ -321,7 +345,7 @@ const PedestrianRoute = () => {
       // 받아온 데이터 하나의 배열에 저장 (폴리라인 그리기 위함)
       const combineResponse = [
         ...response1?.data.features,
-        ...response2?.data.features,
+        // ...response2?.data.features,
         ...response3?.data.features,
         ...response4?.data.features,
       ];
@@ -329,14 +353,14 @@ const PedestrianRoute = () => {
       // 각각의 0번째 값에 총 거리 값이 저장되어 있기 때문에 거리 합치기 위한 코드
       const safeDistance1 =
         response1?.data.features[0].properties.totalDistance;
-      const safeDistance2 =
-        response2?.data.features[0].properties.totalDistance;
+      // const safeDistance2 =
+      //   response2?.data.features[0].properties.totalDistance;
       const safeDistance3 =
         response3?.data.features[0].properties.totalDistance;
       const safeDistance4 =
         response4?.data.features[0].properties.totalDistance;
       const safeTotalDistance =
-        safeDistance1 + safeDistance2 + safeDistance3 + safeDistance4;
+        safeDistance1 + safeDistance3 + safeDistance4;
 
       console.log("데이터가 어떤형식?", combineResponse);
 
@@ -356,7 +380,7 @@ const PedestrianRoute = () => {
 
       setSafeDistance(distance);
     } catch (e) {
-      alert("reqSafeRoute 에서 알림: " + e);
+      // alert("reqSafeRoute 에서 알림: " + e);
     }
   };
   //*******************************************************
@@ -412,8 +436,12 @@ const PedestrianRoute = () => {
 
     if (routeType === "short") {
       setShortLine(polyline_);
+      cctv1Marker?.setVisible(false)
+      cctv2Marker?.setVisible(false)
     } else if (routeType === "safe") {
       setSafeLine(polyline_);
+      cctv1Marker?.setVisible(true)
+      cctv2Marker?.setVisible(true)
     }
   };
 
@@ -497,8 +525,13 @@ const PedestrianRoute = () => {
     const lng_diff_minus = Number(poi.noorLon) - locDiff
     const lng_diff_plus = Number(poi.noorLon) + locDiff
 
-    if((realTimeLocation?.lat >= lat_diff_minus && realTimeLocation?.lat <= lat_diff_plus) && (realTimeLocation?.lng >= lng_diff_minus && realTimeLocation?.lng <= lng_diff_plus)) {
-      setIsArrived(true)
+    if (
+      realTimeLocation?.lat >= lat_diff_minus &&
+      realTimeLocation?.lat <= lat_diff_plus &&
+      realTimeLocation?.lng >= lng_diff_minus &&
+      realTimeLocation?.lng <= lng_diff_plus
+    ) {
+      setIsArrived(true);
     }
 
   }, [realTimeLocation])
@@ -537,6 +570,7 @@ const PedestrianRoute = () => {
               {shortDistance}
             </p>
           </div>
+          {safeCoords1 && safeCoords2 && (
           <div
             className={
               (isShortOrSafe === "safe" ? "selected-" : "") +
@@ -554,7 +588,7 @@ const PedestrianRoute = () => {
             >
               {safeDistance}
             </p>
-          </div>
+          </div> )}
         </div>
       )}
 
@@ -583,7 +617,7 @@ const PedestrianRoute = () => {
           </>
         )}
       </div>
-      {isArrived && <AiModal />}
+      {isArrived && <AiModal poi={poi}/>}
     </div>
   );
 };

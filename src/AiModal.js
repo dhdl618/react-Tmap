@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const AiModal = () => {
+const AiModal = ({poi}) => {
     const modalBgRef = useRef(null)
     
     const nav = useNavigate()
@@ -11,7 +11,7 @@ const AiModal = () => {
       };
 
       const goAIGuide = () => {
-        nav("/ai-guide")
+        nav("/ai-guide", {state: {poi}})
       }
 
   return (
