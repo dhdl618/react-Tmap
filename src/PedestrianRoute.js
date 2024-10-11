@@ -210,7 +210,7 @@ const PedestrianRoute = () => {
     try {
       const options = {
         method: "GET",
-        url: "http://10.0.2.2:8080/cctv",
+        url: "http://localhost:8080/cctv",
         params: {
           startLat: myCurrentLocation?.lat, // 출발지
           startLon: myCurrentLocation?.lng, // 출발지
@@ -238,7 +238,7 @@ const PedestrianRoute = () => {
     try {
       const options = {
         method: "GET",
-        url: "http://10.0.2.2:8080/cctv",
+        url: "http://localhost:8080/cctv",
         params: {
           startLat: centerCoords?.lat, // 중간지점
           startLon: centerCoords?.lng, // 중간지점
