@@ -56,6 +56,9 @@ const PedestrianRoute = () => {
 
   const [isArrived, setIsArrived] = useState(false)
 
+  // 파싱 데이터
+  const [parsedData, setParsedData] = useState(null)
+
   const nav = useNavigate();
 
   useEffect(() => {
@@ -142,9 +145,6 @@ const PedestrianRoute = () => {
   const reloadMap = () => {
     nav("/");
   };
-
-  // 보행자 경로 안내 데이터 및 경로 그리기
-  const resultdrawArr = useRef([]);
 
   // 최단 경로 API 요청
   const fetchShortRoute = async () => {
@@ -455,14 +455,179 @@ const PedestrianRoute = () => {
     }
   };
 
-  const startNavigation = () => {
+  const startNavigation = async () => {
     setIsNavigating(true);
+
+    const text = "안내를 시작합니다."
+
+    try {
+      const response = await axios.post(
+        "http://10.0.2.2:8080/api/tts/convert",
+        { text },
+        {
+          responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
+        }
+      );
+      // 음성 파일을 브라우저에서 재생하는 코드
+      const audioBlob = new Blob([response.data], { type: "audio/mp3" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+
+      await audio.play(); // 음성 파일 재생
+      
+      setIsTTSAllowed(true)
+    } catch (e) {
+      alert("TTS 오류 " + e);
+    }
 
     myMap.setCenter(
       new Tmapv2.LatLng(myCurrentLocation.lat - 0.0003, myCurrentLocation.lng)
     );
 
     myMap.setZoom(18);
+
+    // 최단경로, 안심경로 판단 후, 파싱 함수를 호출
+    if (isShortOrSafe === "short" && shortRoute) {
+      const desArray = shortRoute.map((item) => ({
+        coords: item.geometry.coordinates,
+        descript: item.properties.description
+      }));
+
+      sendToParsing(desArray);
+    } else if (isShortOrSafe === "safe" && safeRoute) {
+      const desArray = safeRoute.map((item) => ({
+        coords: item.geometry.coordinates,
+        descript: item.properties.description
+      }));
+
+      sendToParsing(desArray);
+    }
+  };
+
+  const TTS = async (text) => {
+      if(isFirstTTS === false) {
+      const defaultText = "안내를 시작합니다."
+  
+      try {
+        const response = await axios.post(
+          "http://10.0.2.2:8080/api/tts/convert",
+          { defaultText },
+          {
+            responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
+          }
+        );
+        // 음성 파일을 브라우저에서 재생하는 코드
+        const audioBlob = new Blob([response.data], { type: "audio/mp3" });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+  
+        await audio.play(); // 음성 파일 재생
+        
+        setIsFirstTTS(true)
+        
+      } catch (e) {
+        alert("TTS 오류 " + e);
+      }
+    }
+    
+    if(isFirstTTS) {
+      try {
+        const response = await axios.post(
+          "http://10.0.2.2:8080/api/tts/convert",
+          { text },
+          {
+            responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
+          }
+        );
+        // 음성 파일을 브라우저에서 재생하는 코드
+        const audioBlob = new Blob([response.data], { type: "audio/mp3" });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        // audio.autoplay = true  // 자동 재생 허용
+
+        TTSRef.current = audio;
+
+        if (TTSRef.current === audio) {
+          await audio.play(); // 음성 파일 재생
+        }
+      } catch (e) {
+        alert("TTS 오류 " + e);
+      }
+    }
+  }
+
+  // description을 파싱하기 위해 API 요청
+  const sendToParsing = async (data) => {
+    try {
+      const response = await axios.post("http://10.0.2.2:8080/api/navi/parse", data)
+
+      const resData = response?.data
+      setParsedData(resData)
+      setIsTTSAllowed(true)
+    } catch (e) {
+      alert("파싱 에러")
+    }
+  }
+
+  // 파싱 데이터를 이용해서 TTS 호출
+  const [isTTSAllowed, setIsTTSAllowed] = useState(false)
+  const [lastDescript, setLastDescript] = useState(null)
+  const [isFirstTTS, setIsFirstTTS] = useState(null)
+
+  const TTSRef = useRef(null)
+
+  useEffect(() => {
+    if(parsedData && isTTSAllowed) {
+      const TTSdescript = parsedData?.find(item => isLocationMatch(item.coords, realTimeLocation))
+
+      if(TTSdescript?.descript !== undefined && TTSdescript?.descript !== lastDescript) {
+        sendToTTS(TTSdescript.descript)
+        // TTS(TTSdescript.descript)
+        setLastDescript(TTSdescript.descript)
+      } else {
+        // alert("디스크립션 undefined")
+      }
+    }
+  }, [realTimeLocation, isTTSAllowed])
+
+  const isLocationMatch = (coords, myLocation) => {
+    const lat = Array.isArray(coords[0]) ? coords[0][1] : coords[1]
+    const lng = Array.isArray(coords[0]) ? coords[0][0] : coords[0]
+    
+    const locDiff = 0.0001  // 약 10m 차이
+
+    // 현재 위치가 오차 범위 안에 들어오는지 판별
+    const latMatch = Math.abs(lat - myLocation.lat) <= locDiff
+    const lngMatch = Math.abs(lng - myLocation.lng) <= locDiff
+
+    return latMatch && lngMatch
+  }
+
+  const sendToTTS = async (text) => {
+    if (isTTSAllowed) {
+      try {
+        const response = await axios.post(
+          "http://10.0.2.2:8080/api/tts/convert",
+          { text },
+          {
+            responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
+          }
+        );
+        // 음성 파일을 브라우저에서 재생하는 코드
+        const audioBlob = new Blob([response.data], { type: "audio/mp3" });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        // audio.autoplay = true  // 자동 재생 허용
+
+        TTSRef.current = audio;
+
+        if (TTSRef.current === audio) {
+          await audio.play(); // 음성 파일 재생
+        }
+      } catch (e) {
+        alert("TTS 오류 " + e);
+      }
+    }
   };
 
   const handleCurrentLocationClick = () => {
@@ -514,7 +679,7 @@ const PedestrianRoute = () => {
   //*************************************************
 
   useEffect(()=> {
-    // 목적지 주변에 대한 경위도 차이 값
+    // 목적지 주변에 대한 경위도 차이 값 (약 15m)
     const locDiff = 0.00015
     
     // 목적지 기준 0.00015 만큼의 +/- 위도
