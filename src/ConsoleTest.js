@@ -39,13 +39,8 @@ const ConsoleTest = () => {
         descript: item.properties.description,
         }));
         
-     
-
-    
         sentToParsing(desArray);
         setDescription(1)
-      
-
     } catch (error) {
       console.error("Error fetching route:", error);
     }
