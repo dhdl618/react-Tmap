@@ -84,6 +84,11 @@ const SearchBar = ({state, lat, lng}) => {
           className="search-input"
           onChange={handleKeyword}
           value={params}
+          onKeyDown={(e) => {
+            if(e.key == 'Enter' && poiKeyword) {
+              getPOIData()
+            }
+          }}
         ></input>
         <button
           disabled={poiKeyword === ""}
