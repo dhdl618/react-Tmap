@@ -23,7 +23,7 @@ const AIguide = () => {
     try {
       // alert("일단 들어와써")
       const response = await fetch(
-        "http://10.0.2.2:8080/api/gpt",
+        "https://yunharyu.shop/api/gpt",
         {
           method: 'POST',
           headers: { "Content-Type": "application/json" },

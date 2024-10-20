@@ -8,18 +8,16 @@
   --vw: 100%;
 }
 
-/* Main */
-.loading-div {
-  /* width: calc(var(--vw, 1vw) * 100); */
-  height: calc(var(--vh, 1vh) * 100);
+/* loading */
+.dovi-loading-div {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: calc(var(--vh, 1vh) * 100)
 }
 
-.loading-img {
-  width: 350px;
-  height: 450px;
+.dovi-loading {
+  width: calc(var(--vw, 1vw) * 100);
 }
 
 /* SearchBar */

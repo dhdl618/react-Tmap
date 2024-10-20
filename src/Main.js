@@ -5,7 +5,6 @@ import SearchBar from "./SearchBar";
 
 import redPoint_img from "./img/redPoint_15.png";
 import myLoc_img from "./img/my_location_50.png"
-import dovi_gif from "./img/dovi.gif"
 
 // Tmap API를 사용
 const { Tmapv2 } = window;
@@ -22,7 +21,7 @@ const Main = () => {
     const mapDiv = document.getElementById("main-map");
 
     // id가 main-map인 요소에 자식이 없으면 Map 생성
-    if (!mapDiv.children.length) {
+    if (mapDiv && !mapDiv.children.length) {
       const defaultLocation = new Tmapv2.LatLng(lat, lng);
       const newMap = new Tmapv2.Map("main-map", {
         center: defaultLocation,
@@ -85,7 +84,7 @@ const Main = () => {
     return () => {
       document.removeEventListener("message", handleMessage);
     };
-  }, [map, marker]);
+  }, [map, marker, currentLocation]);
 
 
   // 현재 위치 버튼 클릭 핸들러

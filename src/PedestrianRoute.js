@@ -953,7 +953,7 @@ const PedestrianRoute = () => {
       const options = {
         method: "GET",
         // url: "http://10.0.2.2:8080/cctv",
-        url: "http://3.35.235.220:8080/cctv",
+        url: "https://yunharyu.shop/cctv",
         params: {
           startLat: myCurrentLocation?.lat, // 출발지
           startLon: myCurrentLocation?.lng, // 출발지
@@ -982,7 +982,7 @@ const PedestrianRoute = () => {
       const options = {
         method: "GET",
         // url: "http://10.0.2.2:8080/cctv",
-        url: "http://3.35.235.220:8080/cctv",
+        url: "https://yunharyu.shop/cctv",
         params: {
           startLat: centerCoords?.lat, // 중간지점
           startLon: centerCoords?.lng, // 중간지점
@@ -1254,13 +1254,13 @@ const PedestrianRoute = () => {
   const sendToParsing = async (data) => {
     try {
       // const response = await axios.post("http://10.0.2.2:8080/api/navi/parse", data)
-      const response = await axios.post("http://3.35.235.220:8080/api/navi/parse", data)
+      const response = await axios.post("https://yunharyu.shop/api/navi/parse", data)
 
       const resData = response?.data
       setParsedData(resData)
       // setIsTTSAllowed(true)
     } catch (e) {
-      alert("파싱 에러")
+      alert("파싱 오류 " + e)
     }
   }
 
@@ -1301,7 +1301,7 @@ const PedestrianRoute = () => {
       try {
         const response = await axios.post(
           // "http://10.0.2.2:8080/api/tts/convert",
-          "http://3.35.235.220:8080/api/tts/convert",
+          "https://yunharyu.shop/api/tts/convert",
           { text },
           {
             responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
