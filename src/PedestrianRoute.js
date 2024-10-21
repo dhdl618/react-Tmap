@@ -1310,10 +1310,10 @@ const PedestrianRoute = () => {
         // 음성 파일을 브라우저에서 재생하는 코드
         const audioBlob = new Blob([response.data], { type: "audio/mp3" });
         const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
+        // const audio = new Audio(audioUrl);
         // audio.autoplay = true  // 자동 재생 허용
 
-        TTSRef.current = audio;
+        // TTSRef.current = audio;
 
         // 오디오객체를 Ref로 저장해서 재사용
         if (TTSRef.current) {
