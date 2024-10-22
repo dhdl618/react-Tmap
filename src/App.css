@@ -85,6 +85,53 @@
 }
 
 
+/* DropDown */
+.menu-container {
+  background-color: white;
+  width: 180px;
+  height: 400px;
+  position: absolute;
+  top: 50px;
+  border-radius: 5px;
+}
+
+.menu-profile {
+  margin: 0px;
+  background-color: #6cafff;
+  display: flex;
+  align-items: center;
+  padding: 15px 0px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.menu-profile-img img{
+  width: 60px;
+  margin: 0px 15px 0px 15px;
+}
+
+.menu-profile-user p {
+  margin: 0px;
+  padding: 0px;
+  color: white;
+}
+
+.menu-list {
+  padding: 7px;
+}
+
+.menu-list div {
+  /* background-color: red; */
+  margin-bottom: 5px;
+  height: 40px;
+  display: flex;
+  border-bottom: 1.5px solid #e5f0ff;
+  align-items: center;
+  padding-left: 7px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #5f5f5f;
+}
 
 /* Main */
 .cur-loc-btn {

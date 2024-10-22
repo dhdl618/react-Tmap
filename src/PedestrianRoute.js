@@ -1288,7 +1288,7 @@ const PedestrianRoute = () => {
     const lat = Array.isArray(coords[0]) ? coords[0][1] : coords[1]
     const lng = Array.isArray(coords[0]) ? coords[0][0] : coords[0]
     
-    const locDiff = 0.0001  // 약 10m 차이
+    const locDiff = 0.0002  // 약 20m 차이
 
     // 현재 위치가 오차 범위 안에 들어오는지 판별
     const latMatch = Math.abs(lat - myLocation.lat) <= locDiff
@@ -1381,8 +1381,8 @@ const PedestrianRoute = () => {
   //*************************************************
 
   useEffect(()=> {
-    // 목적지 주변에 대한 경위도 차이 값 (약 15m)
-    const locDiff = 0.00015
+    // 목적지 주변에 대한 경위도 차이 값 (약 30m)
+    const locDiff = 0.0003
     
     // 목적지 기준 0.00015 만큼의 +/- 위도
     const lat_diff_minus = Number(poi.noorLat) - locDiff

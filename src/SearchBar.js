@@ -6,11 +6,15 @@ import menu_img from "./img/menu_50.png"
 import back_img from "./img/back_20.png"
 import search_img from "./img/search_20.png"
 
+import DropDown from "./DropDown";
+
 const SearchBar = ({state, lat, lng}) => {
   const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
   
   // 검색창에 적은 값을 저장
   const [poiKeyword, setPoiKeyword] = useState("");
+
+  const [view, setView] = useState(false)
 
   // 쿼리 파라미터를 이용하여 키워드 가져오기
   const {params} = useParams()
@@ -66,6 +70,10 @@ const SearchBar = ({state, lat, lng}) => {
     nav('/')
   }
 
+  const dropMenu = () => {
+    setView(!view)
+  }
+
   return (
     <div>
       <div className="search-bar-container">
@@ -74,7 +82,7 @@ const SearchBar = ({state, lat, lng}) => {
             <img src={back_img} />
           </button>
         ) : (
-          <button className="menu-btn">
+          <button className="menu-btn" onClick={dropMenu}>
             <img src={menu_img} />
           </button>
         )}
@@ -97,6 +105,7 @@ const SearchBar = ({state, lat, lng}) => {
         >
           <img src={search_img} />
         </button>
+        {view && (<DropDown />)}
       </div>
     </div>
   );
