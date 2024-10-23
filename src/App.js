@@ -125,6 +125,7 @@ import PedestrianRoute from "./PedestrianRoute";
 import SafeRouteCode from "./SafeRouteCode";
 import AIguide from "./AIguide";
 import ConsoleTest from "./ConsoleTest";
+import BetweenUser from "./BetweenUser";
 
 const App = () => {
   
@@ -148,6 +149,7 @@ const App = () => {
         <Route path="/poi-route-result/:keyword" element={<WalkingRouteResult />} />
         <Route path="/pedestrian-route" element={<PedestrianRoute />} />
         <Route path="/ai-guide" element={<AIguide />} />
+        <Route path="/between-user-path" element={<BetweenUser />} />
       </Routes>
     </BrowserRouter>
   );

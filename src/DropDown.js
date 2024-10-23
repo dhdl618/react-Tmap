@@ -7,7 +7,7 @@ const DropDown = () => {
     const nav = useNavigate()
 
     const goUserPath = () => {
-        nav('/ai-guide')
+        nav('/between-user-path')
     }
 
   return (
