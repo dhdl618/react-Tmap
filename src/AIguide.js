@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from 'react-markdown';
 
 import dovi_png from "./img/dovi_ai.png"
 import person_png from "./img/person_48.png"
@@ -110,7 +111,7 @@ const AIguide = () => {
             </div>
             <div id="resArea" className="ai-res-area">
               <p>
-                {!resWord ? "답변을 기다리는 중..." : resWord}
+                {!resWord ? "답변을 기다리는 중..." : <ReactMarkdown>{resWord}</ReactMarkdown>}
                 {isTextDone ? "" : "🔸"}
               </p>
             </div>

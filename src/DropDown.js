@@ -1,11 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import person_img from "./img/person_50.png";
 
 const DropDown = () => {
+    const nav = useNavigate()
 
     const goUserPath = () => {
-        alert("사용자 간 경로를 실행합니다.")
+        nav('/ai-guide')
     }
 
   return (
