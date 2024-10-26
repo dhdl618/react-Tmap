@@ -4,62 +4,81 @@ import axios from "axios";
 
 const ConsoleTest = () => {
   const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
-  const [description, setDescription] = useState(null);
+  const [myID, setMyID] = useState(null);
 
   useEffect(() => {
-    if (!description) {
-      fetchTmapData();
-    }
-    console.log("데이터", description);
-  }, [description]);
+  }, []);
 
-  const fetchTmapData = async () => {
+  const createRanID = async () => {
+    const myLocation = {
+      latitude: 37.009193,
+      longitude: 127.256577
+    }
+    
     try {
-      // alert("short Route: api 호출 계속 해")
-      const headers = { appKey: TMAP_API_KEY };
-      const response = await axios.post(
-        "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
-        {
-          startX: 127.2642483, //한경대 출발
-          startY: 37.0116265,
-          endX: 127.2674896, //스타벅스 계동DT점 도착
-          endY: 36.9860133,
-          startName: "출발지",
-          endName: "도착지",
-        },
-        { headers }
-      );
+      // const headers = { appKey: TMAP_API_KEY };
+      // const response = await axios.post(
+      //   "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
+      //   {
+      //     startX: 127.2642483, //한경대 출발
+      //     startY: 37.0116265,
+      //     endX: 127.2674896, //스타벅스 계동DT점 도착
+      //     endY: 36.9860133,
+      //     startName: "출발지",
+      //     endName: "도착지",
+      //   },
+      //   { headers }
+      // );
+
+      const response = await axios.post('https://yunharyu.shop/api/interactions/RandomId', myLocation)
 
       // 받아온 데이터
-      const resultData = response?.data.features;
 
+      console.log("데이터는 ", response)
 
-        const desArray = resultData?.map((item) => ({
-        coords: item.geometry.coordinates,
-        descript: item.properties.description,
-        }));
-        
-        sentToParsing(desArray);
-        setDescription(1)
+      setMyID(response.data)
     } catch (error) {
-      console.error("Error fetching route:", error);
+      console.log("에러 발생: ", error);
     }
   };
 
-  const sentToParsing = async (data) => {
+  const getOthersLoc = async () => {
     try {
-      console.log("data가 있어?", data)
-      const response = await axios.post("http://localhost:8080/api/navi/parse", data)
+      const response = await axios.get(`https://yunharyu.shop/api/interactions/${9116}`)
 
-      const resData = response?.data
-
-      console.log("파싱 데이터", resData)
-    } catch (e) {
-      console.log("파싱 에러")
+      console.log("위치", response.data)
+    } catch (error) {
+      console.log("에러 발생: ", error)
     }
   }
 
-  return <div>ConsoleTest</div>;
+  const updateMyLoc = async () => {
+    const  newLoc = {
+      latitude: 37.009193,
+      longitude: 127.256577
+    }
+
+    try {
+      const response = await axios.put(`https://yunharyu.shop/api/interactions/${9116}`, newLoc)
+    } catch (error) {
+      console.log("에러 발생: ", error)
+    }
+  }
+
+  const deleteID = async () => {
+    try {
+      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${1959}`)
+    } catch (error) {
+      console.log("에러 발생: ", error)
+    }
+  }
+
+  return <div>
+    <button onClick={createRanID}>내 ID 생성</button>
+    <button onClick={getOthersLoc}>상대방 위치</button>
+    <button onClick={updateMyLoc}>내 위치 갱신</button>
+    <button onClick={deleteID}>내 ID 삭제</button>
+  </div>;
 };
 
 export default ConsoleTest;

@@ -10,8 +10,11 @@ const BetweenUser = () => {
   const [myID, setMyID] = useState(null); // 내 ID 값
   const [loadingCoords, setLoadingCoords] = useState(false); // 받기 버튼 누른 후, 상대 위치 값 반환 유무
   const [othersLocation, setOthersLocation] = useState(null); // 상대방 위치
-  const [myCurrentLocation, setMyCurrentLocation] = useState(null); // 내 현재 위치 3초마다 갱신
-  const [inputID, setInputID] = useState(null);
+  const [myBtwCurrentLocation, setMyBtwCurrentLocation] = useState(null); // 내 현재 위치 3초마다 갱신
+  const [inputID, setInputID] = useState(null); // 입력란에 적은 ID
+  const [isCorrect, setIsCorrect] = useState(true)
+  const [othersID, setOthersID] = useState(null)
+  const [hasSpace, setHasSpace] = useState(false)
 
   const reload = () => {
     nav("/");
@@ -22,7 +25,7 @@ const BetweenUser = () => {
       const myLocation = JSON.parse(e.data);
       // alert(myLocation);
       const { lat, lng } = myLocation;
-      setMyCurrentLocation({ lat, lng });
+      setMyBtwCurrentLocation({ lat, lng });
     };
 
     // 지속적으로 listen
@@ -32,27 +35,61 @@ const BetweenUser = () => {
     return () => {
       document.removeEventListener("message", handleMessage);
     };
-  }, [myCurrentLocation, loadingCoords]);
+  }, [myBtwCurrentLocation, loadingCoords]);
 
   const handleKeyword = (e) => {
     setInputID(e.target.value);
   };
 
   // 나의 ID 받기
-  const getMyID = () => {
+  const getMyID = async () => {
     /* 자신의 ID를 받음 (난수)
     받은 ID를 setMyID(response)로 저장 */
+    try {
+      const myLocation = {
+        latitude: myBtwCurrentLocation?.lat,
+        longitude: myBtwCurrentLocation?.lng,
+      };
+
+      const response = await axios.post(
+        "https://yunharyu.shop/api/interactions/RandomId",
+        myLocation
+      );
+
+      // 받아온 데이터
+      // console.log("데이터는 ", response);
+
+      setMyID(response?.data);
+    } catch (error) {
+      console.log("에러 발생: ", error);
+    }
   };
 
   // 상대방의 위치를 DB로 받고, 받은 값을 넘겨주면서 화면 이동
-  const receiveOthersCoords = () => {
+  const receiveOthersCoords = async () => {
     // alert(inputID)
 
-    if(!inputID.includes(" ")) {
-        alert(inputID)
-        setLoadingCoords(true);
+    if (!inputID.includes(" ")) {
+      setLoadingCoords(true);
+      setHasSpace(false)
+
+      try {
+        const response = await axios.get(
+          `https://yunharyu.shop/api/interactions/${inputID}`
+        );
+
+        const data = response?.data;
+        setOthersID(data?.id)
+
+        setOthersLocation({ lat: data?.latitude, lng: data?.longitude });
+        
+        // alert(othersLocation.lat)
+      } catch (error) {
+        setLoadingCoords(false)
+        setIsCorrect(false)
+      }
     } else {
-        alert("공백이 포함되었습니다")
+      setHasSpace(true)
     }
 
     /* 디비로 상대방의 위치를 가져와서 
@@ -63,13 +100,22 @@ const BetweenUser = () => {
     }*/
   };
 
+  useEffect(() => {
+    if(othersLocation) {
+      nav('/btw-pedestrian-route', {state : {myBtwCurrentLocation, othersLocation, othersID, myID}})
+      setLoadingCoords(false)
+    }
+  }, [othersLocation, othersID])
+
   return (
     <div className="btw-upath-container">
       <div className="btw-upath-body">
         <div className="btw-upath-me">
           <p>내 ID: {myID}</p>
           <div style={{ textAlign: "center" }}>
-            <button onClick={getMyID}>내 ID 받기</button>
+            <button 
+            disabled={myBtwCurrentLocation === null}
+            onClick={getMyID}>내 ID 받기</button>
           </div>
         </div>
         <div className="btw-upath-them">
@@ -83,13 +129,24 @@ const BetweenUser = () => {
               }
             }}
           ></input>
-          <button disabled={inputID === null || inputID === ""} onClick={receiveOthersCoords}>
+          <button
+            disabled={inputID === null || inputID === ""}
+            onClick={receiveOthersCoords}
+          >
             받기
           </button>
         </div>
-        {loadingCoords && (
+        {loadingCoords && isCorrect && (
           <div className="btw-upath-loadingdiv">
             <img src={loading_gif} />
+          </div>
+        )} {!loadingCoords && !isCorrect && !hasSpace && (
+          <div className="btw-upath-loadingdiv">
+            <p>ID가 존재하지 않습니다.</p>
+          </div>
+        )} {!loadingCoords && hasSpace && !isCorrect && (
+          <div className="btw-upath-loadingdiv">
+            <p>공백이 존재합니다.</p>
           </div>
         )}
         <div className="btw-upath-gohome" onClick={reload}>

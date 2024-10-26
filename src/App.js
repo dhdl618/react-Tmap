@@ -126,6 +126,7 @@ import SafeRouteCode from "./SafeRouteCode";
 import AIguide from "./AIguide";
 import ConsoleTest from "./ConsoleTest";
 import BetweenUser from "./BetweenUser";
+import BtwPedestrianRoute from "./BtwPedestrianRoute";
 
 const App = () => {
   
@@ -150,6 +151,7 @@ const App = () => {
         <Route path="/pedestrian-route" element={<PedestrianRoute />} />
         <Route path="/ai-guide" element={<AIguide />} />
         <Route path="/between-user-path" element={<BetweenUser />} />
+        <Route path="/btw-pedestrian-route" element={<BtwPedestrianRoute />} />
       </Routes>
     </BrowserRouter>
   );

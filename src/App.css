@@ -207,6 +207,12 @@
   transform: translateX(-50%);
 }
 
+.btw-upath-loadingdiv p {
+  font-size: 14px;
+  font-weight: 500;
+  color: red;
+}
+
 .btw-upath-gohome {
   background-color: #ffb300;
   position: absolute;
