@@ -80,6 +80,10 @@ const SearchBar = ({ state, lat, lng }) => {
     setView(!view);
   };
 
+  const closeKeyboard = () => {
+    console.log("키보드가 닫힙니다.")
+  }
+
   return (
     <div>
       <div className="search-bar-container">
@@ -97,6 +101,7 @@ const SearchBar = ({ state, lat, lng }) => {
           placeholder="주소 및 장소 검색"
           className="search-input"
           onChange={handleKeyword}
+          onBlur={closeKeyboard}
           value={params}
           onKeyDown={(e) => {
             if (e.key == "Enter" && poiKeyword) {
