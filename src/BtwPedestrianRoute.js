@@ -8,8 +8,8 @@ import blueMarker_img from "./img/blue_marker_48.png";
 import x_img from "./img/white_x_48.png";
 import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
-import redPoint_img from "./img/redPoint_15.png";
-import bluePoint_img from "./img/bluePoint_15.png"
+import redPoint_img from "./img/redPoint_20.png";
+import bluePoint_img from "./img/bluePoint_20.png"
 import camera_img from "./img/cctv_19.png"
 import shield_img from "./img/shield_19.png"
 
@@ -675,7 +675,7 @@ const BtwPedestrianRoute = () => {
         const newOthersMarker = new Tmapv2.Marker({
           position: newOthersLoc,
           map: myMap,
-          icons: bluePoint_img
+          icon: bluePoint_img
         })
         setOthersRealTimeMarker(newOthersMarker)
       }

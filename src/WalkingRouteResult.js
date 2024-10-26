@@ -6,7 +6,7 @@ import SearchBar from './SearchBar'
 
 import redMarker_img from "./img/red_marker_48.png"
 import myLoc_img from "./img/my_location_50.png"
-import redPoint_img from "./img/redPoint_15.png"
+import redPoint_img from "./img/redPoint_20.png"
 import loading_gif from './img/loading.gif'
 import upArrow_img from './img/up_arrow_48.png'
 import downArrow_img from './img/down_arrow_48.png'

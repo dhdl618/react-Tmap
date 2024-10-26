@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import SearchBar from "./SearchBar";
 
-import redPoint_img from "./img/redPoint_15.png";
+import redPoint_img from "./img/redPoint_20.png";
 import myLoc_img from "./img/my_location_50.png"
 
 // Tmap API를 사용
