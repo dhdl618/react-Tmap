@@ -39,7 +39,7 @@ const AiModal = ({ poi, myID, locSave }) => {
         <div className="modal-inner">
           {locSave === false ? (
             <p style={{ marginBottom: "3px" }}>상대방이 연결을 종료하였습니다.</p>
-          ) : locSave === null && (
+          ) : locSave === undefined && (
             <p style={{ marginBottom: "3px" }}>목적지에 도착하였습니다.</p>
           )}
           <p>안내를 종료합니다.</p>
