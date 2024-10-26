@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import person_img from "./img/person_50.png";
 
 const DropDown = () => {
-    const nav = useNavigate()
+  const nav = useNavigate();
 
-    const goUserPath = () => {
-        nav('/between-user-path')
-    }
+  const goUserPath = () => {
+    nav("/between-user-path");
+  };
 
   return (
     <div className="menu-container">
@@ -24,15 +24,9 @@ const DropDown = () => {
         </div>
       </div>
       <div className="menu-list">
-        <div>
-          로그아웃
-        </div>
-        <div onClick={goUserPath}>
-          사용자 간 경로
-        </div>
-        <div>
-          설정
-        </div>
+        <div>로그아웃</div>
+        <div onClick={goUserPath}>사용자 간 경로</div>
+        <div>설정</div>
       </div>
     </div>
   );

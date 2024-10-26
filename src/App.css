@@ -86,6 +86,15 @@
 
 
 /* DropDown */
+.touch-interaction {
+  width: calc(var(--vw, 1vw) * 100);
+  height: calc(var(--vh, 1vh) * 100);
+  position: absolute;
+  top: 0px;
+  display: flex;
+  align-items: center;
+}
+
 .menu-container {
   background-color: white;
   width: 180px;
@@ -804,7 +813,6 @@
   font-size: 13px;
   font-weight: 500;
 }
-
 
 .modal-bg {
   background-color: rgba(0, 0, 0, 0.25);
