@@ -11,7 +11,7 @@ const AiModal = ({ poi, myID }) => {
     try {
       const response = await axios.delete(`https://yunharyu.shop/api/interactions/${myID}`)
       
-      alert("정상적으로 삭제하였습니다.")
+      // alert("정상적으로 삭제하였습니다.")
 
       nav("/");
       

@@ -642,11 +642,11 @@ const PedestrianRoute = () => {
     // 목적지 주변에 대한 경위도 차이 값 (약 30m)
     const locDiff = 0.0003
     
-    // 목적지 기준 0.00015 만큼의 +/- 위도
+    // 목적지 기준 0.0003 만큼의 +/- 위도
     const lat_diff_minus = Number(poi.noorLat) - locDiff
     const lat_diff_plus = Number(poi.noorLat) + locDiff
 
-    // 목적지 기준 0.00015 만큼의 +/- 경도
+    // 목적지 기준 0.0003 만큼의 +/- 경도
     const lng_diff_minus = Number(poi.noorLon) - locDiff
     const lng_diff_plus = Number(poi.noorLon) + locDiff
 

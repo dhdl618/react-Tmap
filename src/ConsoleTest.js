@@ -67,7 +67,7 @@ const ConsoleTest = () => {
 
   const deleteID = async () => {
     try {
-      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${1959}`)
+      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${5013}`)
     } catch (error) {
       console.log("에러 발생: ", error)
     }

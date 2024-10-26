@@ -12,12 +12,19 @@ const BetweenUser = () => {
   const [othersLocation, setOthersLocation] = useState(null); // 상대방 위치
   const [myBtwCurrentLocation, setMyBtwCurrentLocation] = useState(null); // 내 현재 위치 3초마다 갱신
   const [inputID, setInputID] = useState(null); // 입력란에 적은 ID
-  const [isCorrect, setIsCorrect] = useState(true)
+  const [isExist, setIsExist] = useState(true)
   const [othersID, setOthersID] = useState(null)
   const [hasSpace, setHasSpace] = useState(false)
 
-  const reload = () => {
-    nav("/");
+  const reload = async () => {
+    try {
+      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${myID}`)
+    
+      nav("/");
+      
+    } catch (error) {
+      alert("ID 삭제 에러: " + error)
+    }
   };
 
   useEffect(() => {
@@ -69,7 +76,7 @@ const BetweenUser = () => {
   const receiveOthersCoords = async () => {
     // alert(inputID)
 
-    if (!inputID.includes(" ")) {
+    if (!inputID.includes(" ") && myID) {
       setLoadingCoords(true);
       setHasSpace(false)
 
@@ -86,7 +93,7 @@ const BetweenUser = () => {
         // alert(othersLocation.lat)
       } catch (error) {
         setLoadingCoords(false)
-        setIsCorrect(false)
+        setIsExist(false)
       }
     } else {
       setHasSpace(true)
@@ -130,23 +137,27 @@ const BetweenUser = () => {
             }}
           ></input>
           <button
-            disabled={inputID === null || inputID === ""}
+            disabled={inputID === null || inputID === "" || !myID}
             onClick={receiveOthersCoords}
           >
             받기
           </button>
         </div>
-        {loadingCoords && isCorrect && (
+        {loadingCoords && isExist && (
           <div className="btw-upath-loadingdiv">
             <img src={loading_gif} />
           </div>
-        )} {!loadingCoords && !isCorrect && !hasSpace && (
+        )} {!isExist && !hasSpace && myID &&(
           <div className="btw-upath-loadingdiv">
             <p>ID가 존재하지 않습니다.</p>
           </div>
-        )} {!loadingCoords && hasSpace && !isCorrect && (
+        )} {hasSpace && myID && (
           <div className="btw-upath-loadingdiv">
             <p>공백이 존재합니다.</p>
+          </div>
+        )} {!myID && (
+          <div className="btw-upath-loadingdiv">
+            <p>ID 받기를 눌러주세요.</p>
           </div>
         )}
         <div className="btw-upath-gohome" onClick={reload}>
