@@ -9,14 +9,15 @@ const AiModal = ({ poi, myID, locSave }) => {
 
   const reloadMap = async () => {
     try {
-      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${myID}`)
-      
+      const response = await axios.delete(
+        `https://yunharyu.shop/api/interactions/${myID}`
+      );
+
       // alert("정상적으로 삭제하였습니다.")
 
       nav("/");
-      
     } catch (error) {
-      alert("ID 삭제 에러: " + error)
+      alert("ID 삭제 에러: " + error);
     }
   };
 
@@ -37,9 +38,12 @@ const AiModal = ({ poi, myID, locSave }) => {
         }}
       >
         <div className="modal-inner">
-          {locSave === false ? (
-            <p style={{ marginBottom: "3px" }}>상대방이 연결을 종료하였습니다.</p>
-          ) : locSave === undefined && (
+          {locSave === false && (
+            <p style={{ marginBottom: "3px" }}>
+              상대방이 연결을 종료하였습니다.
+            </p>
+          )}
+          {locSave === undefined && (
             <p style={{ marginBottom: "3px" }}>목적지에 도착하였습니다.</p>
           )}
           <p>안내를 종료합니다.</p>
@@ -63,12 +67,9 @@ const AiModal = ({ poi, myID, locSave }) => {
               </button>
             </div>
           ) : (
-            <button
-                style={{ backgroundColor: "#fffbda" }}
-                onClick={reloadMap}
-              >
-                닫기
-              </button>
+            <button style={{ backgroundColor: "#fffbda" }} onClick={reloadMap}>
+              닫기
+            </button>
           )}
         </div>
       </div>
