@@ -10,6 +10,7 @@ import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_15.png";
 import camera_img from "./img/cctv_19.png"
+import shield_img from "./img/shield_19.png"
 
 import AiModal from "./AiModal";
 
@@ -272,7 +273,7 @@ const PedestrianRoute = () => {
           safeCoords1?.lng
         ),
         map: myMap,
-        icon: camera_img,
+        icon: shield_img,
       });
       setCctv1Marker(cctvCamera1)
 
@@ -282,7 +283,7 @@ const PedestrianRoute = () => {
           safeCoords2?.lng
         ),
         map: myMap,
-        icon: camera_img,
+        icon: shield_img,
       });
       setCctv2Marker(cctvCamera2)
     }

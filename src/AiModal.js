@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const AiModal = ({ poi, myID }) => {
+const AiModal = ({ poi, myID, locSave }) => {
   const modalBgRef = useRef(null);
 
   const nav = useNavigate();
@@ -37,7 +37,11 @@ const AiModal = ({ poi, myID }) => {
         }}
       >
         <div className="modal-inner">
-          <p style={{ marginBottom: "3px" }}>목적지에 도착하였습니다.</p>
+          {locSave === false ? (
+            <p style={{ marginBottom: "3px" }}>상대방이 연결을 종료하였습니다.</p>
+          ) : locSave === null && (
+            <p style={{ marginBottom: "3px" }}>목적지에 도착하였습니다.</p>
+          )}
           <p>안내를 종료합니다.</p>
           <br />
           {poi ? (

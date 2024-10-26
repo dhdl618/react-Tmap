@@ -11,6 +11,7 @@ import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_15.png";
 import bluePoint_img from "./img/bluePoint_15.png"
 import camera_img from "./img/cctv_19.png"
+import shield_img from "./img/shield_19.png"
 
 import AiModal from "./AiModal";
 
@@ -280,7 +281,7 @@ const BtwPedestrianRoute = () => {
           safeCoords1?.lng
         ),
         map: myMap,
-        icon: camera_img,
+        icon: shield_img,
       });
       setCctv1Marker(cctvCamera1)
 
@@ -290,7 +291,7 @@ const BtwPedestrianRoute = () => {
           safeCoords2?.lng
         ),
         map: myMap,
-        icon: camera_img,
+        icon: shield_img,
       });
       setCctv2Marker(cctvCamera2)
     }
@@ -606,7 +607,7 @@ const BtwPedestrianRoute = () => {
     }
   }, [isNavigating]);
 
-  const [otehrsRealTimeLocation, setOthersRealTimeLocation] = useState(null)
+  const [othersRealTimeLocation, setOthersRealTimeLocation] = useState(null)
   const [othersRealTimeMarker, setOthersRealTimeMarker] = useState(null)
 
   // 3초마다 상대방 위치 받아오기
@@ -628,16 +629,18 @@ const BtwPedestrianRoute = () => {
     }
   }
 
+  const [isOthersLocSaved, setIsOthersLocSaved] = useState(true)
+
   const getRealtimeOthersLocation = async () => {
     try {
       const response = await axios.get(
         `https://yunharyu.shop/api/interactions/${othersID}`
       );
 
-      const data = response.data;
+      const data = response?.data;
       setOthersRealTimeLocation({lat: data.latitude, lng: data.longitude})
     } catch (error) {
-      alert("상대방 위치 GET 에러" + error)
+      setIsOthersLocSaved(false)
     }
   }
 
@@ -662,10 +665,10 @@ const BtwPedestrianRoute = () => {
     }
 
     // 상대방 마커 추가
-    if(otehrsRealTimeLocation) {
+    if(othersRealTimeLocation) {
       const newOthersLoc = new Tmapv2.LatLng(
-        otehrsRealTimeLocation.lat,
-        otehrsRealTimeLocation.lng
+        othersRealTimeLocation.lat,
+        othersRealTimeLocation.lng
       )
 
       if(othersRealTimeMarker) {
@@ -788,6 +791,7 @@ const BtwPedestrianRoute = () => {
         )}
       </div>
       {isArrived && <AiModal myID={myID} />}
+      {!isOthersLocSaved && <AiModal myID={myID} locSave={isOthersLocSaved} />}
     </div>
   );
 };
