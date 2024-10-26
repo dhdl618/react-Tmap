@@ -589,7 +589,6 @@ const BtwPedestrianRoute = () => {
 
   // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트 (지도 및 마커용)
   useEffect(() => {
-    if (isNavigating) {
       const handleMessage = (e) => {
         const myLocation = JSON.parse(e.data);
         
@@ -604,7 +603,6 @@ const BtwPedestrianRoute = () => {
       return () => {
         document.removeEventListener("message", handleMessage);
       };
-    }
   }, [isNavigating]);
 
   const [othersRealTimeLocation, setOthersRealTimeLocation] = useState(null)
@@ -646,7 +644,7 @@ const BtwPedestrianRoute = () => {
 
   useEffect(() => {
     // 마커 업데이트 함수
-    if (realTimeLocation) {
+    if (realTimeLocation && isNavigating) {
       const newLoc = new Tmapv2.LatLng(
         realTimeLocation.lat,
         realTimeLocation.lng
@@ -665,7 +663,7 @@ const BtwPedestrianRoute = () => {
     }
 
     // 상대방 마커 추가
-    if(othersRealTimeLocation) {
+    if(othersRealTimeLocation && isNavigating) {
       const newOthersLoc = new Tmapv2.LatLng(
         othersRealTimeLocation.lat,
         othersRealTimeLocation.lng
@@ -698,7 +696,7 @@ const BtwPedestrianRoute = () => {
     const lng_diff_minus = Number(othersLocation.lng) - locDiff
     const lng_diff_plus = Number(othersLocation.lng) + locDiff
 
-    if (
+    if (isNavigating && 
       realTimeLocation?.lat >= lat_diff_minus &&
       realTimeLocation?.lat <= lat_diff_plus &&
       realTimeLocation?.lng >= lng_diff_minus &&
