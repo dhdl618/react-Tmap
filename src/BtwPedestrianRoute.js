@@ -144,8 +144,14 @@ const BtwPedestrianRoute = () => {
     }
   };
 
-  const reloadMap = () => {
-    nav("/");
+  const reloadMap = async () => {
+    try {
+      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${myID}`)
+      
+      nav("/");
+    } catch (error) {
+      console.log("에러 발생: ", error)
+    }
   };
 
   // 최단 경로 API 요청
