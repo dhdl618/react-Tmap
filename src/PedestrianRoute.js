@@ -9,8 +9,8 @@ import x_img from "./img/white_x_48.png";
 import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_20.png";
-import camera_img from "./img/cctv_22.png"
-import shield_img from "./img/shield_19.png"
+import camera_img from "./img/cctv_22.png";
+import shield_img from "./img/shield_19.png";
 
 import AiModal from "./AiModal";
 
@@ -29,14 +29,17 @@ const PedestrianRoute = () => {
   const shortRouteRef = useRef(null);
   const safeRouteRef = useRef(null);
   // CCTV 마커 표시
-  const [cctv1Marker, setCctv1Marker] = useState(null)
-  const [cctv2Marker, setCctv2Marker] = useState(null) 
+  const [cctv1Marker, setCctv1Marker] = useState(null);
+  const [cctv2Marker, setCctv2Marker] = useState(null);
 
   const [shortRoute, setShortRoute] = useState(null);
   const [safeRoute, setSafeRoute] = useState(null);
   // 최단경로, 안심경로 거리 값 저장
   const [shortDistance, setShortDistance] = useState(null);
   const [safeDistance, setSafeDistance] = useState(null);
+  // 최단경로, 안심경로 총 시간 값 저장
+  const [shortTime, setShortTime] = useState(null);
+  const [safeTime, setSafeTime] = useState(null);
   // 최단경로, 안심경로 선택 정보 값 저장
   const [isShortOrSafe, setIsShortOrSafe] = useState("short");
   // 안내 시작 클릭 유무 값 저장
@@ -55,10 +58,10 @@ const PedestrianRoute = () => {
   // 중간지점 좌표 값 저장
   const [centerCoords, setCenterCoords] = useState(null);
 
-  const [isArrived, setIsArrived] = useState(false)
+  const [isArrived, setIsArrived] = useState(false);
 
   // 파싱 데이터
-  const [parsedData, setParsedData] = useState(null)
+  const [parsedData, setParsedData] = useState(null);
 
   const nav = useNavigate();
 
@@ -185,6 +188,15 @@ const PedestrianRoute = () => {
         }
 
         setShortDistance(distance);
+
+        let shTime = resultData[0].properties.totalTime;
+        if (shTime >= 60) {
+          shTime = (shTime / 60).toFixed(0) + "분";
+        } else {
+          shTime = "1분";
+        }
+
+        setShortTime(shTime);
       } catch (e) {
         // alert("fetchShortRoute 에서 알림: " + e);
       }
@@ -195,7 +207,6 @@ const PedestrianRoute = () => {
     if (safeRouteRef.current) {
       handleResponse(safeRouteRef.current, "safe");
     } else {
-      
     }
   };
 
@@ -228,8 +239,10 @@ const PedestrianRoute = () => {
 
       // alert(res?.data)
 
-      setSafeCoords1({ lat: res?.data[0].latitude, lng: res?.data[0].longitude });
-      
+      setSafeCoords1({
+        lat: res?.data[0].latitude,
+        lng: res?.data[0].longitude,
+      });
     } catch (e) {
       // alert("reqCctvRoute1 에서 알림: " + e);
       console.log(e);
@@ -255,8 +268,10 @@ const PedestrianRoute = () => {
 
       const res = await axios.request(options);
 
-      setSafeCoords2({ lat: res?.data[0].latitude, lng: res?.data[0].longitude });
-      
+      setSafeCoords2({
+        lat: res?.data[0].latitude,
+        lng: res?.data[0].longitude,
+      });
     } catch (e) {
       // alert("reqCctvRoute2 에서 알림: " + e);
       console.log(e);
@@ -268,31 +283,25 @@ const PedestrianRoute = () => {
       reqSafeRoute();
 
       const cctvCamera1 = new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(
-          safeCoords1?.lat,
-          safeCoords1?.lng
-        ),
+        position: new Tmapv2.LatLng(safeCoords1?.lat, safeCoords1?.lng),
         map: myMap,
         icon: camera_img,
       });
-      setCctv1Marker(cctvCamera1)
+      setCctv1Marker(cctvCamera1);
 
       const cctvCamera2 = new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(
-          safeCoords2?.lat,
-          safeCoords2?.lng
-        ),
+        position: new Tmapv2.LatLng(safeCoords2?.lat, safeCoords2?.lng),
         map: myMap,
         icon: camera_img,
       });
-      setCctv2Marker(cctvCamera2)
+      setCctv2Marker(cctvCamera2);
     }
   }, [safeCoords1, safeCoords2, centerCoords]);
 
   const reqSafeRoute = async () => {
     try {
       const headers = { appKey: TMAP_API_KEY };
-      
+
       const response1 = await axios.post(
         "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
         {
@@ -362,17 +371,8 @@ const PedestrianRoute = () => {
         response3?.data.features[0].properties.totalDistance;
       const safeDistance4 =
         response4?.data.features[0].properties.totalDistance;
-      const safeTotalDistance =
-        safeDistance1 + safeDistance3 + safeDistance4;
-
-      console.log("데이터가 어떤형식?", combineResponse);
-
-      safeRouteRef.current = combineResponse
-      setSafeRoute(combineResponse);
-
-      // 합친 데이터를 함수 인자로 보냄
-      handleResponse(combineResponse, "safe");
-
+      const safeTotalDistance = safeDistance1 + safeDistance3 + safeDistance4;
+      
       // 합친 총 길이를 계산
       let distance = safeTotalDistance;
       if (distance >= 1000) {
@@ -380,8 +380,33 @@ const PedestrianRoute = () => {
       } else {
         distance = distance + "m";
       }
+      
+      console.log("데이터가 어떤형식?", combineResponse);
 
-      setSafeDistance(distance);
+      safeRouteRef.current = combineResponse;
+      setSafeRoute(combineResponse);
+
+      // 합친 데이터를 함수 인자로 보냄
+      handleResponse(combineResponse, "safe");
+
+      const safeTime1 =
+        response1?.data.features[0].properties.totalTime;
+      // const safeTime2 =
+      //   response2?.data.features[0].properties.totalTime;
+      const safeTime3 =
+        response3?.data.features[0].properties.totalTime;
+      const safeTime4 =
+        response4?.data.features[0].properties.totalTime;
+      
+        let safeTotalTime = safeTime1 + safeTime3 + safeTime4;
+
+        if (safeTotalTime >= 60) {
+          safeTotalTime = (safeTotalTime / 60).toFixed(0) + "분";
+        } else {
+          safeTotalTime = "1분";
+        }
+
+      setSafeTime(safeTotalTime);
     } catch (e) {
       // alert("reqSafeRoute 에서 알림: " + e);
     }
@@ -439,12 +464,12 @@ const PedestrianRoute = () => {
 
     if (routeType === "short") {
       setShortLine(polyline_);
-      cctv1Marker?.setVisible(false)
-      cctv2Marker?.setVisible(false)
+      cctv1Marker?.setVisible(false);
+      cctv2Marker?.setVisible(false);
     } else if (routeType === "safe") {
       setSafeLine(polyline_);
-      cctv1Marker?.setVisible(true)
-      cctv2Marker?.setVisible(true)
+      cctv1Marker?.setVisible(true);
+      cctv2Marker?.setVisible(true);
     }
   };
 
@@ -460,30 +485,10 @@ const PedestrianRoute = () => {
 
   const startNavigation = async () => {
     setIsNavigating(true);
-    setIsTTSAllowed(true)
+    setIsTTSAllowed(true);
 
-    const text = "안내를 시작합니다."
-    sendToTTS(text)
-
-    // try {
-    //   const response = await axios.post(
-    //     "http://10.0.2.2:8080/api/tts/convert",
-    //     { text },
-    //     {
-    //       responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
-    //     }
-    //   );
-    //   // 음성 파일을 브라우저에서 재생하는 코드
-    //   const audioBlob = new Blob([response.data], { type: "audio/mp3" });
-    //   const audioUrl = URL.createObjectURL(audioBlob);
-    //   const audio = new Audio(audioUrl);
-
-    //   await audio.play(); // 음성 파일 재생
-    //   setIsTTSAllowed(true)  
-      
-    // } catch (e) {
-    //   alert("TTS 오류 " + e);
-    // }
+    const text = "안내를 시작합니다.";
+    sendToTTS(text);
 
     myMap.setCenter(
       new Tmapv2.LatLng(myCurrentLocation.lat - 0.0003, myCurrentLocation.lng)
@@ -495,14 +500,14 @@ const PedestrianRoute = () => {
     if (isShortOrSafe === "short" && shortRoute) {
       const desArray = shortRoute.map((item) => ({
         coords: item.geometry.coordinates,
-        descript: item.properties.description
+        descript: item.properties.description,
       }));
 
       sendToParsing(desArray);
     } else if (isShortOrSafe === "safe" && safeRoute) {
       const desArray = safeRoute.map((item) => ({
         coords: item.geometry.coordinates,
-        descript: item.properties.description
+        descript: item.properties.description,
       }));
 
       sendToParsing(desArray);
@@ -513,83 +518,90 @@ const PedestrianRoute = () => {
   const sendToParsing = async (data) => {
     try {
       // const response = await axios.post("http://10.0.2.2:8080/api/navi/parse", data)
-      const response = await axios.post("https://yunharyu.shop/api/navi/parse", data)
+      const response = await axios.post(
+        "https://yunharyu.shop/api/navi/parse",
+        data
+      );
 
-      const resData = response?.data
-      setParsedData(resData)
+      const resData = response?.data;
+      setParsedData(resData);
       // setIsTTSAllowed(true)
     } catch (e) {
-      alert("파싱 오류 " + e)
+      alert("파싱 오류 " + e);
     }
-  }
+  };
 
   // 파싱 데이터를 이용해서 TTS 호출
-  const [isTTSAllowed, setIsTTSAllowed] = useState(false)
-  const [lastDescript, setLastDescript] = useState(null)
-  const [isFirstTTS, setIsFirstTTS] = useState(null)
+  const [isTTSAllowed, setIsTTSAllowed] = useState(false);
+  const [lastDescript, setLastDescript] = useState(null);
+  const [isFirstTTS, setIsFirstTTS] = useState(null);
 
-  const TTSRef = useRef(null)
+  const TTSRef = useRef(null);
 
   useEffect(() => {
-    if(parsedData && isTTSAllowed) {
-      const TTSdescript = parsedData?.find(item => isLocationMatch(item.coords, realTimeLocation))
+    if (parsedData && isTTSAllowed) {
+      const TTSdescript = parsedData?.find((item) =>
+        isLocationMatch(item.coords, realTimeLocation)
+      );
 
-      if(TTSdescript?.descript !== undefined && TTSdescript?.descript !== lastDescript) {
-        sendToTTS(TTSdescript.descript)
-        setLastDescript(TTSdescript.descript)
+      if (
+        TTSdescript?.descript !== undefined &&
+        TTSdescript?.descript !== lastDescript
+      ) {
+        sendToTTS(TTSdescript.descript);
+        setLastDescript(TTSdescript.descript);
       } else {
         // alert("디스크립션 undefined")
       }
     }
-  }, [realTimeLocation, isTTSAllowed])
+  }, [realTimeLocation, isTTSAllowed]);
 
   const isLocationMatch = (coords, myLocation) => {
-    const lat = Array.isArray(coords[0]) ? coords[0][1] : coords[1]
-    const lng = Array.isArray(coords[0]) ? coords[0][0] : coords[0]
-    
-    const locDiff = 0.0002  // 약 20m 차이
+    const lat = Array.isArray(coords[0]) ? coords[0][1] : coords[1];
+    const lng = Array.isArray(coords[0]) ? coords[0][0] : coords[0];
+
+    const locDiff = 0.0002; // 약 20m 차이
 
     // 현재 위치가 오차 범위 안에 들어오는지 판별
-    const latMatch = Math.abs(lat - myLocation.lat) <= locDiff
-    const lngMatch = Math.abs(lng - myLocation.lng) <= locDiff
+    const latMatch = Math.abs(lat - myLocation.lat) <= locDiff;
+    const lngMatch = Math.abs(lng - myLocation.lng) <= locDiff;
 
-    return latMatch && lngMatch
-  }
+    return latMatch && lngMatch;
+  };
 
   const sendToTTS = async (text) => {
-      try {
-        const response = await axios.post(
-          // "http://10.0.2.2:8080/api/tts/convert",
-          "https://yunharyu.shop/api/tts/convert",
-          { text },
-          {
-            responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
-          }
-        );
-        // 음성 파일을 브라우저에서 재생하는 코드
-        const audioBlob = new Blob([response.data], { type: "audio/mp3" });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        // const audio = new Audio(audioUrl);
-        // audio.autoplay = true  // 자동 재생 허용
-
-        // TTSRef.current = audio;
-
-        // 오디오객체를 Ref로 저장해서 재사용
-        if (TTSRef.current) {
-          TTSRef.current.src = audioUrl;
-        } else {
-          TTSRef.current = new Audio(audioUrl);
+    try {
+      const response = await axios.post(
+        // "http://10.0.2.2:8080/api/tts/convert",
+        "https://yunharyu.shop/api/tts/convert",
+        { text },
+        {
+          responseType: "blob", // 음성 파일이 blob 형태로 응답되기 때문에 이 설정이 필요
         }
-        await TTSRef.current.play();
-  
+      );
+      // 음성 파일을 브라우저에서 재생하는 코드
+      const audioBlob = new Blob([response.data], { type: "audio/mp3" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      // const audio = new Audio(audioUrl);
+      // audio.autoplay = true  // 자동 재생 허용
 
-        // if (TTSRef.current === audio) {
-        //   await audio.play(); // 음성 파일 재생
-        // }
-      } catch (e) {
-        alert("TTS 오류 " + e);
+      // TTSRef.current = audio;
+
+      // 오디오객체를 Ref로 저장해서 재사용
+      if (TTSRef.current) {
+        TTSRef.current.src = audioUrl;
+      } else {
+        TTSRef.current = new Audio(audioUrl);
       }
+      await TTSRef.current.play();
+
+      // if (TTSRef.current === audio) {
+      //   await audio.play(); // 음성 파일 재생
+      // }
+    } catch (e) {
+      alert("TTS 오류 " + e);
     }
+  };
 
   const handleCurrentLocationClick = () => {
     myMap.setCenter(
@@ -602,7 +614,7 @@ const PedestrianRoute = () => {
     if (isNavigating) {
       const handleMessage = (e) => {
         const myLocation = JSON.parse(e.data);
-        
+
         const { lat, lng } = myLocation;
         setRealTimeLocation({ lat, lng });
       };
@@ -639,17 +651,17 @@ const PedestrianRoute = () => {
   }, [realTimeLocation]);
   //*************************************************
 
-  useEffect(()=> {
+  useEffect(() => {
     // 목적지 주변에 대한 경위도 차이 값 (약 30m)
-    const locDiff = 0.0003
-    
+    const locDiff = 0.0003;
+
     // 목적지 기준 0.0003 만큼의 +/- 위도
-    const lat_diff_minus = Number(poi.noorLat) - locDiff
-    const lat_diff_plus = Number(poi.noorLat) + locDiff
+    const lat_diff_minus = Number(poi.noorLat) - locDiff;
+    const lat_diff_plus = Number(poi.noorLat) + locDiff;
 
     // 목적지 기준 0.0003 만큼의 +/- 경도
-    const lng_diff_minus = Number(poi.noorLon) - locDiff
-    const lng_diff_plus = Number(poi.noorLon) + locDiff
+    const lng_diff_minus = Number(poi.noorLon) - locDiff;
+    const lng_diff_plus = Number(poi.noorLon) + locDiff;
 
     if (
       realTimeLocation?.lat >= lat_diff_minus &&
@@ -659,8 +671,7 @@ const PedestrianRoute = () => {
     ) {
       setIsArrived(true);
     }
-
-  }, [realTimeLocation])
+  }, [realTimeLocation]);
 
   return (
     <div className="pedestrian-route-main-container">
@@ -686,35 +697,74 @@ const PedestrianRoute = () => {
             onClick={shortOrSafeSelected}
             data-info="short"
           >
-            <p style={{ fontSize: "15px" }}>최단 경로</p>
-            <p
-              className={
-                (isShortOrSafe === "short" ? "selected-" : "") +
-                "choice-route-div-div-distance"
-              }
-            >
-              {shortDistance}
-            </p>
+            <div className="short-div">
+              <p>최단 경로</p>
+            </div>
+            <div className="distance-time-div">
+              <div style={{ textAlign: "center" }}>
+                <p
+                  className={
+                    (isShortOrSafe === "short" ? "selected-" : "") +
+                    "choice-route-div-div-time"
+                  }
+                >
+                  {shortTime}
+                </p>
+              </div>
+              <div>
+                <p className="slash">|</p>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <p
+                  className={
+                    (isShortOrSafe === "short" ? "selected-" : "") +
+                    "choice-route-div-div-distance"
+                  }
+                >
+                  {shortDistance}
+                </p>
+              </div>
+            </div>
           </div>
           {safeCoords1 && safeCoords2 && (
-          <div
-            className={
-              (isShortOrSafe === "safe" ? "selected-" : "") +
-              "choice-route-div-div"
-            }
-            onClick={shortOrSafeSelected}
-            data-info="safe"
-          >
-            <p style={{ fontSize: "15px" }}>안심 경로</p>
-            <p
+            <div
               className={
                 (isShortOrSafe === "safe" ? "selected-" : "") +
-                "choice-route-div-div-distance"
+                "choice-route-div-div"
               }
+              onClick={shortOrSafeSelected}
+              data-info="safe"
             >
-              {safeDistance}
-            </p>
-          </div> )}
+              <div className="safe-div">
+                <p>안심 경로</p>
+              </div>
+              <div className="distance-time-div">
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    className={
+                      (isShortOrSafe === "short" ? "selected-" : "") +
+                      "choice-route-div-div-time"
+                    }
+                  >
+                    {safeTime}
+                  </p>
+                </div>
+                <div>
+                  <p className="slash">|</p>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    className={
+                      (isShortOrSafe === "safe" ? "selected-" : "") +
+                      "choice-route-div-div-distance"
+                    }
+                  >
+                    {safeDistance}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -743,7 +793,7 @@ const PedestrianRoute = () => {
           </>
         )}
       </div>
-      {isArrived && <AiModal poi={poi}/>}
+      {isArrived && <AiModal poi={poi} />}
     </div>
   );
 };
