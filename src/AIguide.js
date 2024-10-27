@@ -80,10 +80,29 @@ const AIguide = () => {
   // 스크롤 하단으로 이동시키기 위한 Ref
   const resRef = useRef(null);
 
+  const [isUserScrolling, setIsUserScrolling] = useState(false)
+
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if(containerRef.current) {
+        const {scrollTop, scrollHeight, clientHeight} = containerRef.current
+        const isAtBottom = scrollHeight - scrollTop <= clientHeight + 5
+        setIsUserScrolling(!isAtBottom)
+      }
+    }
+
+    containerRef.current?.addEventListener("scroll", handleScroll)
+    return()=>containerRef.current?.removeEventListener("scroll", handleScroll)  
+  }, [])
+
   // 응답이 길어짐에 따라 자동으로 스크롤 하단 이동 
   useEffect(() => {
-    resRef.current.scrollIntoView();
-  }, [resWord]);
+    if(!isUserScrolling) {
+      resRef.current.scrollIntoView();
+    }
+  }, [resWord, isUserScrolling]);
 
   return (
     <div className="ai-container">
@@ -94,7 +113,7 @@ const AIguide = () => {
         <div className="ai-des-location">
           <p>{place}</p>
         </div>
-        <div className="ai-text-area">
+        <div className="ai-text-area"  ref={containerRef}>
           <div style={{display: "flex", justifyContent: "flex-end"}}>
             <div className="ai-req-div">
               <img className="ai-req-img" src={person_png}/>
@@ -111,8 +130,7 @@ const AIguide = () => {
             </div>
             <div id="resArea" className="ai-res-area">
               <p>
-                {!resWord ? "답변을 기다리는 중..." : <ReactMarkdown>{resWord}</ReactMarkdown>}
-                {isTextDone ? "" : "🔸"}
+                {!resWord ? "답변을 기다리는 중..." : <ReactMarkdown>{resWord + (!isTextDone ? "🔸" : "")}</ReactMarkdown>}
               </p>
             </div>
             <div ref={resRef}></div>
