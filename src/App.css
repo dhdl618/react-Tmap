@@ -573,6 +573,7 @@
   background-color: #ffffff;
   color: rgb(0, 0, 0);
   border-radius: 15px;
+  border: 4px solid white;
 }
 .selected-choice-route-div-div {
   display: flex;
@@ -580,9 +581,10 @@
   align-items: center;
   width: calc(var(--vw, 1vw) * 40);
   text-align: center;
-  background-color: #6cafff;
-  color: rgb(255, 255, 255);
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   border-radius: 15px;
+  border: 4px solid #6cafff;
 }
 
 .choice-route-div-div-distance {
@@ -593,7 +595,7 @@
 .selected-choice-route-div-div-distance {
   font-size: 12px;
   margin-left: 10px;
-  color: white;
+  color: gray;
 }
 /* .choice-route-div-div button {
   border: none;

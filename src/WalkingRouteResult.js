@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import SearchBar from './SearchBar'
 
-import redMarker_img from "./img/red_marker_48.png"
+import redMarker_img from "./img/markerE_45.png"
 import myLoc_img from "./img/my_location_50.png"
 import redPoint_img from "./img/redPoint_20.png"
 import loading_gif from './img/loading.gif'

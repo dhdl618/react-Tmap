@@ -3,14 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-import redMarker_img from "./img/red_marker_48.png";
-import blueMarker_img from "./img/blue_marker_48.png";
+import SMarker_img from "./img/markerS_45.png";
+import EMarker_img from "./img/markerE_45.png";
 import x_img from "./img/white_x_48.png";
 import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_20.png";
 import bluePoint_img from "./img/bluePoint_20.png"
-import camera_img from "./img/cctv_19.png"
+import camera_img from "./img/cctv_22.png"
 import shield_img from "./img/shield_19.png"
 
 import AiModal from "./AiModal";
@@ -131,7 +131,7 @@ const BtwPedestrianRoute = () => {
           myBtwCurrentLocation.lng
         ),
         map: newMap,
-        icon: blueMarker_img,
+        icon: SMarker_img,
       });
       setSMarker(startMarker);
 
@@ -139,7 +139,7 @@ const BtwPedestrianRoute = () => {
       const endMarker = new Tmapv2.Marker({
         position: new Tmapv2.LatLng(othersLocation.lat, othersLocation.lng),
         map: newMap,
-        icon: redMarker_img,
+        icon: EMarker_img,
       });
       setEMarker(endMarker);
     }
@@ -281,7 +281,7 @@ const BtwPedestrianRoute = () => {
           safeCoords1?.lng
         ),
         map: myMap,
-        icon: shield_img,
+        icon: camera_img,
       });
       setCctv1Marker(cctvCamera1)
 
@@ -291,7 +291,7 @@ const BtwPedestrianRoute = () => {
           safeCoords2?.lng
         ),
         map: myMap,
-        icon: shield_img,
+        icon: camera_img,
       });
       setCctv2Marker(cctvCamera2)
     }
