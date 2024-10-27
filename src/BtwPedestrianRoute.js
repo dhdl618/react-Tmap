@@ -39,6 +39,9 @@ const BtwPedestrianRoute = () => {
   // 최단경로, 안심경로 거리 값 저장
   const [shortDistance, setShortDistance] = useState(null);
   const [safeDistance, setSafeDistance] = useState(null);
+  // 최단경로, 안심경로 총 시간 값 저장
+  const [shortTime, setShortTime] = useState(null)
+  const [safeTime, setSafeTime] = useState(null)
   // 최단경로, 안심경로 선택 정보 값 저장
   const [isShortOrSafe, setIsShortOrSafe] = useState("short");
   // 안내 시작 클릭 유무 값 저장
@@ -193,6 +196,15 @@ const BtwPedestrianRoute = () => {
         }
 
         setShortDistance(distance);
+        
+        let shTime = resultData[0].properties.totalTime;
+        if (shTime >= 60) {
+          shTime = (shTime / 60).toFixed(0) + "분";
+        } else {
+          shTime = "1분";
+        }
+
+        setShortTime(shTime);
       } catch (e) {
         // alert("fetchShortRoute 에서 알림: " + e);
       }
@@ -390,6 +402,25 @@ const BtwPedestrianRoute = () => {
       }
 
       setSafeDistance(distance);
+
+      const safeTime1 =
+        response1?.data.features[0].properties.totalTime;
+      // const safeTime2 =
+      //   response2?.data.features[0].properties.totalTime;
+      const safeTime3 =
+        response3?.data.features[0].properties.totalTime;
+      const safeTime4 =
+        response4?.data.features[0].properties.totalTime;
+      
+        let safeTotalTime = safeTime1 + safeTime3 + safeTime4;
+
+        if (safeTotalTime >= 60) {
+          safeTotalTime = (safeTotalTime / 60).toFixed(0) + "분";
+        } else {
+          safeTotalTime = "1분";
+        }
+
+      setSafeTime(safeTotalTime);
     } catch (e) {
       // alert("reqSafeRoute 에서 알림: " + e);
     }
@@ -731,35 +762,74 @@ const BtwPedestrianRoute = () => {
             onClick={shortOrSafeSelected}
             data-info="short"
           >
-            <p style={{ fontSize: "15px" }}>최단 경로</p>
-            <p
-              className={
-                (isShortOrSafe === "short" ? "selected-" : "") +
-                "choice-route-div-div-distance"
-              }
-            >
-              {shortDistance}
-            </p>
+            <div className="short-div">
+              <p>최단 경로</p>
+            </div>
+            <div className="distance-time-div">
+              <div style={{ textAlign: "center" }}>
+                <p
+                  className={
+                    (isShortOrSafe === "short" ? "selected-" : "") +
+                    "choice-route-div-div-time"
+                  }
+                >
+                  {shortTime}
+                </p>
+              </div>
+              <div>
+                <p className="slash">|</p>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <p
+                  className={
+                    (isShortOrSafe === "short" ? "selected-" : "") +
+                    "choice-route-div-div-distance"
+                  }
+                >
+                  {shortDistance}
+                </p>
+              </div>
+            </div>
           </div>
           {safeCoords1 && safeCoords2 && (
-          <div
-            className={
-              (isShortOrSafe === "safe" ? "selected-" : "") +
-              "choice-route-div-div"
-            }
-            onClick={shortOrSafeSelected}
-            data-info="safe"
-          >
-            <p style={{ fontSize: "15px" }}>안심 경로</p>
-            <p
+            <div
               className={
                 (isShortOrSafe === "safe" ? "selected-" : "") +
-                "choice-route-div-div-distance"
+                "choice-route-div-div"
               }
+              onClick={shortOrSafeSelected}
+              data-info="safe"
             >
-              {safeDistance}
-            </p>
-          </div> )}
+              <div className="safe-div">
+                <p>안심 경로</p>
+              </div>
+              <div className="distance-time-div">
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    className={
+                      (isShortOrSafe === "short" ? "selected-" : "") +
+                      "choice-route-div-div-time"
+                    }
+                  >
+                    {safeTime}
+                  </p>
+                </div>
+                <div>
+                  <p className="slash">|</p>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    className={
+                      (isShortOrSafe === "safe" ? "selected-" : "") +
+                      "choice-route-div-div-distance"
+                    }
+                  >
+                    {safeDistance}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
