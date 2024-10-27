@@ -380,6 +380,8 @@ const PedestrianRoute = () => {
       } else {
         distance = distance + "m";
       }
+
+      setSafeDistance(distance)
       
       console.log("데이터가 어떤형식?", combineResponse);
 
