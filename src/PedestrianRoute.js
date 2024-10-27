@@ -512,6 +512,7 @@ const PedestrianRoute = () => {
   // description을 파싱하기 위해 API 요청
   const sendToParsing = async (data) => {
     try {
+      alert("파싱 전 데이터" + data)
       // const response = await axios.post("http://10.0.2.2:8080/api/navi/parse", data)
       const response = await axios.post("https://yunharyu.shop/api/navi/parse", data)
 

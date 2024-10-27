@@ -18,8 +18,10 @@ const BetweenUser = () => {
 
   const reload = async () => {
     try {
-      const response = await axios.delete(`https://yunharyu.shop/api/interactions/${myID}`)
-    
+      if(myID) {
+        const response = await axios.delete(`https://yunharyu.shop/api/interactions/${myID}`)
+      }
+      
       nav("/");
       
     } catch (error) {
