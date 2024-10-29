@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-import SMarker_img from "./img/markerS_45.png";
-import EMarker_img from "./img/markerE_45.png";
+import SMarker_img from "./img/marker_start_50.png";
+import EMarker_img from "./img/marker_end_50.png";
 import x_img from "./img/white_x_48.png";
 import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
 import redPoint_img from "./img/redPoint_20.png";
-import camera_img from "./img/cctv_22.png";
+import camera_img from "./img/cctv_28.png";
 import shield_img from "./img/shield_19.png";
 
 import AiModal from "./AiModal";
