@@ -740,14 +740,14 @@ const BtwPedestrianRoute = () => {
   //*************************************************
 
   useEffect(() => {
-    // 상대방 주변에 대한 경위도 차이 값 (약 30m)
-    const locDiff = 0.0003;
+    // 상대방 주변에 대한 경위도 차이 값 (약 20m)
+    const locDiff = 0.0002;
 
-    // 상대방 기준 0.0003 만큼의 +/- 위도
+    // 상대방 기준 0.0002 만큼의 +/- 위도
     const lat_diff_minus = Number(othersLocation.lat) - locDiff;
     const lat_diff_plus = Number(othersLocation.lat) + locDiff;
 
-    // 상대방 기준 0.0003 만큼의 +/- 경도
+    // 상대방 기준 0.0002 만큼의 +/- 경도
     const lng_diff_minus = Number(othersLocation.lng) - locDiff;
     const lng_diff_plus = Number(othersLocation.lng) + locDiff;
 
