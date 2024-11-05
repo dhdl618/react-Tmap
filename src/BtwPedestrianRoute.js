@@ -24,10 +24,12 @@ const BtwPedestrianRoute = () => {
     state: { myBtwCurrentLocation, othersLocation, othersID, myID },
   } = useLocation();
 
+  // 맵, 출발, 도착 마커 값 저장
   const [myMap, setMyMap] = useState(null);
   const [sMarker, setSMarker] = useState(null);
   const [eMarker, setEMarker] = useState(null);
   // const [routeData, setRouteData] = useState(null);
+  // 최단경로, 안심경로 값 저장
   const shortRouteRef = useRef(null);
   const safeRouteRef = useRef(null);
   // CCTV 마커 표시
@@ -59,7 +61,7 @@ const BtwPedestrianRoute = () => {
   const [safeCoords2, setSafeCoords2] = useState(null);
   // 중간지점 좌표 값 저장
   const [centerCoords, setCenterCoords] = useState(null);
-
+  // 목적지 도착 여부 값
   const [isArrived, setIsArrived] = useState(false)
 
   // 파싱 데이터
@@ -736,7 +738,7 @@ const BtwPedestrianRoute = () => {
       setIsArrived(true);
     }
 
-  }, [realTimeLocation])
+  }, [realTimeLocation, othersLocation])
 
   return (
     <div className="pedestrian-route-main-container">

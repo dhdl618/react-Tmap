@@ -8,17 +8,19 @@ const AiModal = ({ poi, myID, locSave }) => {
   const nav = useNavigate();
 
   const reloadMap = async () => {
-    try {
-      const response = await axios.delete(
-        `https://yunharyu.shop/api/interactions/${myID}`
-      );
-
-      // alert("정상적으로 삭제하였습니다.")
-
-      nav("/");
-    } catch (error) {
-      alert("ID 삭제 에러: " + error);
+    if(!myID == undefined) {
+      try {
+        const response = await axios.delete(
+          `https://yunharyu.shop/api/interactions/${myID}`
+        );
+  
+        // alert("정상적으로 삭제하였습니다.")
+      } catch (error) {
+        alert("ID 삭제 에러: " + error);
+      }
     }
+
+    nav("/");
   };
 
   const goAIGuide = () => {

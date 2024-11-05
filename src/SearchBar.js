@@ -11,11 +11,13 @@ import DropDown from "./DropDown";
 const SearchBar = ({ state, lat, lng }) => {
   const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
 
+  //메뉴바 외 터치 이벤트 감지용
   const touchRef = useRef(null);
 
   // 검색창에 적은 값을 저장
   const [poiKeyword, setPoiKeyword] = useState("");
 
+  // 드롭다운 메뉴바 온오프 값
   const [view, setView] = useState(false);
 
   // 쿼리 파라미터를 이용하여 키워드 가져오기
@@ -76,10 +78,12 @@ const SearchBar = ({ state, lat, lng }) => {
     nav("/");
   };
 
+  // 메뉴바 온오프 함수
   const dropMenu = () => {
     setView(!view);
   };
 
+  // 안 씀
   const closeKeyboard = () => {
     console.log("키보드가 닫힙니다.")
   }
