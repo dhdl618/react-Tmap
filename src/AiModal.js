@@ -8,7 +8,7 @@ const AiModal = ({ poi, myID, locSave, halted }) => {
   const nav = useNavigate();
 
   const reloadMap = async () => {
-    if(!myID == undefined) {
+    if(myID !== undefined) {
       try {
         const response = await axios.delete(
           `https://yunharyu.shop/api/interactions/${myID}`

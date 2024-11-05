@@ -606,7 +606,7 @@ const PedestrianRoute = () => {
     }
   };
 
-  const [isFollow, setIsFollow] = useState(true);
+  const [isFollow, setIsFollow] = useState(false);
 
   const setMapCenter = () => {
     setIsFollow(!isFollow);

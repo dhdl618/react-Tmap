@@ -50,7 +50,7 @@ const BtwPedestrianRoute = () => {
   // 안내 시작 클릭 유무 값 저장
   const [isNavigating, setIsNavigating] = useState(false);
   // 현재 위치 값 저장
-  const [realTimeLocation, setRealTimeLocation] = useState(null);
+  const [realTimeLocation, setRealTimeLocation] = useState({lat: myBtwCurrentLocation.lat, lng: myBtwCurrentLocation.lng});
   // 현재 위치 마커
   const [realTimeMarker, setRealTimeMarker] = useState(null);
 
@@ -620,7 +620,7 @@ const BtwPedestrianRoute = () => {
     }
   };
 
-  const [isFollow, setIsFollow] = useState(true);
+  const [isFollow, setIsFollow] = useState(false);
 
   const setMapCenter = () => {
     setIsFollow(!isFollow);
@@ -653,7 +653,7 @@ const BtwPedestrianRoute = () => {
     };
   }, [isNavigating]);
 
-  const [othersRealTimeLocation, setOthersRealTimeLocation] = useState(null);
+  const [othersRealTimeLocation, setOthersRealTimeLocation] = useState({lat: othersLocation.lat, lng: othersLocation.lng});
   const [othersRealTimeMarker, setOthersRealTimeMarker] = useState(null);
 
   // 3초마다 상대방 위치 받아오기
