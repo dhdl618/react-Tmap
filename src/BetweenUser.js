@@ -101,12 +101,6 @@ const BetweenUser = () => {
       setHasSpace(true)
     }
 
-    /* 디비로 상대방의 위치를 가져와서 
-    setOthersLocation(상대방위치) 하고
-    if(othersLocation) {
-    예시) nav('/pedestrian-route', {state : {myCurrentLocation, othersLocation}})
-        nav([경로 안내하는 창으로 이동]) + 상대방 위치값을 넘겨줌
-    }*/
   };
 
   useEffect(() => {

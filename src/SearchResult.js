@@ -3,8 +3,9 @@ import { useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
-import loadingGIF from './img/loading.gif'
 import { useNavigate } from "react-router-dom";
+
+import loadingGIF from './img/loading.gif'
 
 const SearchResult = () => {
   const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY

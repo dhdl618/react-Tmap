@@ -11,7 +11,6 @@ import myLoc_img from "./img/my_location_50.png";
 import myLoc_noFollow_img from "./img/my_location_nofollow_50.png";
 import redPoint_img from "./img/redPoint_20.png";
 import camera_img from "./img/cctv_28.png";
-import shield_img from "./img/shield_19.png";
 
 import AiModal from "./AiModal";
 
@@ -217,7 +216,7 @@ const PedestrianRoute = () => {
     }
   };
 
-  //***********************오늘추가*************************
+  //******************************************************
   useEffect(() => {
     if (centerCoords) {
       reqCctvRoute1();
@@ -322,6 +321,7 @@ const PedestrianRoute = () => {
         { headers }
       );
 
+      // CCTV1>센터>CCTV2 보다 CCTV1>CCTV2 가 효율적이라 주석처리
       // const response2 = await axios.post(
       //   "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json",
       //   {
@@ -435,7 +435,7 @@ const PedestrianRoute = () => {
       }
     });
 
-    //***********************오늘추가*************************
+    //*******************************************************
     // 처음 로딩 때 최단 경로에서 보낸 데이터를 이용해서 중앙 좌표값 구하기
     if (!centerCoords) {
       console.log("drawInfo 배열 데이터 확인", drawInfoArr);

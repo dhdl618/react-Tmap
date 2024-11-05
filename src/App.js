@@ -5,9 +5,7 @@ import Main from './Main'
 import SearchResult from "./SearchResult";
 import WalkingRouteResult from "./WalkingRouteResult";
 import PedestrianRoute from "./PedestrianRoute";
-import SafeRouteCode from "./SafeRouteCode";
 import AIguide from "./AIguide";
-import ConsoleTest from "./ConsoleTest";
 import BetweenUser from "./BetweenUser";
 import BtwPedestrianRoute from "./BtwPedestrianRoute";
 
