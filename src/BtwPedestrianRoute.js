@@ -8,6 +8,7 @@ import EMarker_img from "./img/marker_end_50.png";
 import x_img from "./img/white_x_48.png";
 import loading_gif from "./img/loading.gif";
 import myLoc_img from "./img/my_location_50.png";
+import myLoc_noFollow_img from "./img/my_location_nofollow_50.png";
 import redPoint_img from "./img/redPoint_20.png";
 import bluePoint_img from "./img/bluePoint_20.png"
 import camera_img from "./img/cctv_28.png"
@@ -614,6 +615,14 @@ const BtwPedestrianRoute = () => {
       }
     }
 
+
+  const [isFollow, setIsFollow] = useState(true)
+
+  const setMapCenter = () => {
+    setIsFollow(!isFollow);
+    handleCurrentLocationClick();
+  }
+
   const handleCurrentLocationClick = () => {
     myMap.setCenter(
       new Tmapv2.LatLng(realTimeLocation.lat - 0.0003, realTimeLocation.lng)
@@ -714,6 +723,11 @@ const BtwPedestrianRoute = () => {
       }
     }
 
+    // 현재 위치를 센터로 고정
+    if(isFollow) {
+      handleCurrentLocationClick()
+    }
+
   }, [realTimeLocation]);
   //*************************************************
 
@@ -746,9 +760,9 @@ const BtwPedestrianRoute = () => {
       {isNavigating && (
         <button
           className="is-nav-cur-loc-btn"
-          onClick={handleCurrentLocationClick}
+          onClick={setMapCenter}
         >
-          <img className="my-loc-img" src={myLoc_img} />
+          <img className="my-loc-img" src={isFollow ? myLoc_img : myLoc_noFollow_img} />
         </button>
       )}
       <div className="destination-name-div">

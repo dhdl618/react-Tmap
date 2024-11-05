@@ -99,9 +99,15 @@ const WalkingRouteResult = () => {
     // 현재 위치 버튼 클릭 핸들러
   const handleCurrentLocationClick = () => {
     if (myCurrentLocation && map) {
-      map.setCenter(
-        new Tmapv2.LatLng(myCurrentLocation?.lat, myCurrentLocation?.lng)
-      );
+      if(isHiding) {
+        map.setCenter(
+          new Tmapv2.LatLng(myCurrentLocation?.lat, myCurrentLocation?.lng)
+        );
+      } else {
+        map.setCenter(
+          new Tmapv2.LatLng(myCurrentLocation?.lat - 0.005, myCurrentLocation?.lng)
+        );
+      }
     }
   };
 

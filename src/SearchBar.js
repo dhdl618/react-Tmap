@@ -26,6 +26,8 @@ const SearchBar = ({ state, lat, lng }) => {
   // 페이지 이동을 위한 useNavigate
   const nav = useNavigate();
 
+  const [isClicked, setIsClicked] = useState(false)
+
   // Tmap으로부터 검색한 정보 받아오는 함수 axios 사용
   const getPOIData = () => {
     const options = {
@@ -83,9 +85,9 @@ const SearchBar = ({ state, lat, lng }) => {
     setView(!view);
   };
 
-  // 안 씀
-  const closeKeyboard = () => {
-    console.log("키보드가 닫힙니다.")
+  const inputClick = () => {
+    // alert("클릭함")
+    setIsClicked(true)
   }
 
   return (
@@ -105,7 +107,7 @@ const SearchBar = ({ state, lat, lng }) => {
           placeholder="주소 및 장소 검색"
           className="search-input"
           onChange={handleKeyword}
-          onBlur={closeKeyboard}
+          onClick={inputClick}
           value={params}
           onKeyDown={(e) => {
             if (e.key == "Enter" && poiKeyword) {
@@ -133,6 +135,14 @@ const SearchBar = ({ state, lat, lng }) => {
         )}
         {view && <DropDown />}
       </div>
+      {isClicked && (
+        <div className="white-bg" onClick={()=>{setIsClicked(!isClicked)}}>
+          <div className="search-result-div">
+            <p>검색결과가 표시됩니다</p>
+            <p>지도를 띄우려면 <b>여기</b>를 클릭하세요</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
