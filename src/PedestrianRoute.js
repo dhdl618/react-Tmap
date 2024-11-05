@@ -147,8 +147,14 @@ const PedestrianRoute = () => {
     }
   };
 
+  const [isHalted, setIsHalted] = useState(false);
+
   const reloadMap = () => {
-    nav("/");
+    if (isNavigating) {
+      setIsHalted(true);
+    } else {
+      nav("/");
+    }
   };
 
   // 최단 경로 API 요청
@@ -373,7 +379,7 @@ const PedestrianRoute = () => {
       const safeDistance4 =
         response4?.data.features[0].properties.totalDistance;
       const safeTotalDistance = safeDistance1 + safeDistance3 + safeDistance4;
-      
+
       // 합친 총 길이를 계산
       let distance = safeTotalDistance;
       if (distance >= 1000) {
@@ -382,8 +388,8 @@ const PedestrianRoute = () => {
         distance = distance + "m";
       }
 
-      setSafeDistance(distance)
-      
+      setSafeDistance(distance);
+
       console.log("데이터가 어떤형식?", combineResponse);
 
       safeRouteRef.current = combineResponse;
@@ -392,22 +398,19 @@ const PedestrianRoute = () => {
       // 합친 데이터를 함수 인자로 보냄
       handleResponse(combineResponse, "safe");
 
-      const safeTime1 =
-        response1?.data.features[0].properties.totalTime;
+      const safeTime1 = response1?.data.features[0].properties.totalTime;
       // const safeTime2 =
       //   response2?.data.features[0].properties.totalTime;
-      const safeTime3 =
-        response3?.data.features[0].properties.totalTime;
-      const safeTime4 =
-        response4?.data.features[0].properties.totalTime;
-      
-        let safeTotalTime = safeTime1 + safeTime3 + safeTime4;
+      const safeTime3 = response3?.data.features[0].properties.totalTime;
+      const safeTime4 = response4?.data.features[0].properties.totalTime;
 
-        if (safeTotalTime >= 60) {
-          safeTotalTime = (safeTotalTime / 60).toFixed(0) + "분";
-        } else {
-          safeTotalTime = "1분";
-        }
+      let safeTotalTime = safeTime1 + safeTime3 + safeTime4;
+
+      if (safeTotalTime >= 60) {
+        safeTotalTime = (safeTotalTime / 60).toFixed(0) + "분";
+      } else {
+        safeTotalTime = "1분";
+      }
 
       setSafeTime(safeTotalTime);
     } catch (e) {
@@ -598,25 +601,24 @@ const PedestrianRoute = () => {
       }
       await TTSRef.current.play();
 
-      // if (TTSRef.current === audio) {
-      //   await audio.play(); // 음성 파일 재생
-      // }
     } catch (e) {
       alert("TTS 오류 " + e);
     }
   };
 
-  const [isFollow, setIsFollow] = useState(true)
+  const [isFollow, setIsFollow] = useState(true);
 
   const setMapCenter = () => {
     setIsFollow(!isFollow);
     handleCurrentLocationClick();
-  }
+  };
 
   const handleCurrentLocationClick = () => {
-    myMap?.setCenter(
-      new Tmapv2.LatLng(realTimeLocation.lat - 0.0003, realTimeLocation.lng)
-    );
+    if (realTimeLocation && myMap) {
+      myMap?.setCenter(
+        new Tmapv2.LatLng(realTimeLocation.lat - 0.0003, realTimeLocation.lng)
+      );
+    }
   };
 
   // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트 (지도 및 마커용)
@@ -660,22 +662,23 @@ const PedestrianRoute = () => {
     }
 
     // 현재 위치를 센터로 고정
-    if(isFollow) {
-      handleCurrentLocationClick()
+    if (isFollow) {
+      handleCurrentLocationClick();
     }
-
   }, [realTimeLocation]);
   //*************************************************
 
-  useEffect(() => {
-    // 목적지 주변에 대한 경위도 차이 값 (약 30m)
-    const locDiff = 0.0003;
+  const textRef = useRef(null);
 
-    // 목적지 기준 0.0003 만큼의 +/- 위도
+  useEffect(() => {
+    // 목적지 주변에 대한 경위도 차이 값 (약 20m)
+    const locDiff = 0.0002;
+
+    // 목적지 기준 0.0002 만큼의 +/- 위도
     const lat_diff_minus = Number(poi.noorLat) - locDiff;
     const lat_diff_plus = Number(poi.noorLat) + locDiff;
 
-    // 목적지 기준 0.0003 만큼의 +/- 경도
+    // 목적지 기준 0.0002 만큼의 +/- 경도
     const lng_diff_minus = Number(poi.noorLon) - locDiff;
     const lng_diff_plus = Number(poi.noorLon) + locDiff;
 
@@ -685,6 +688,7 @@ const PedestrianRoute = () => {
       realTimeLocation?.lng >= lng_diff_minus &&
       realTimeLocation?.lng <= lng_diff_plus
     ) {
+
       setIsArrived(true);
     }
   }, [realTimeLocation]);
@@ -693,11 +697,11 @@ const PedestrianRoute = () => {
     <div className="pedestrian-route-main-container">
       <div id="route-map-div"></div>
       {isNavigating && (
-        <button
-          className="is-nav-cur-loc-btn"
-          onClick={setMapCenter}
-        >
-          <img className="my-loc-img" src={isFollow ? myLoc_img : myLoc_noFollow_img} />
+        <button className="is-nav-cur-loc-btn" onClick={setMapCenter}>
+          <img
+            className="my-loc-img"
+            src={isFollow ? myLoc_img : myLoc_noFollow_img}
+          />
         </button>
       )}
       <div className="destination-name-div">
@@ -810,6 +814,7 @@ const PedestrianRoute = () => {
         )}
       </div>
       {isArrived && <AiModal poi={poi} />}
+      {isHalted && <AiModal poi={poi} halted={isHalted} />}
     </div>
   );
 };
