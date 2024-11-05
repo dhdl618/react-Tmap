@@ -744,12 +744,12 @@ const BtwPedestrianRoute = () => {
     const locDiff = 0.0002;
 
     // 상대방 기준 0.0002 만큼의 +/- 위도
-    const lat_diff_minus = Number(othersLocation.lat) - locDiff;
-    const lat_diff_plus = Number(othersLocation.lat) + locDiff;
+    const lat_diff_minus = Number(othersRealTimeLocation.lat) - locDiff;
+    const lat_diff_plus = Number(othersRealTimeLocation.lat) + locDiff;
 
     // 상대방 기준 0.0002 만큼의 +/- 경도
-    const lng_diff_minus = Number(othersLocation.lng) - locDiff;
-    const lng_diff_plus = Number(othersLocation.lng) + locDiff;
+    const lng_diff_minus = Number(othersRealTimeLocation.lng) - locDiff;
+    const lng_diff_plus = Number(othersRealTimeLocation.lng) + locDiff;
 
     if (
       isNavigating &&
@@ -760,7 +760,7 @@ const BtwPedestrianRoute = () => {
     ) {
       setIsArrived(true);
     }
-  }, [realTimeLocation, othersLocation]);
+  }, [realTimeLocation, othersRealTimeLocation]);
 
   return (
     <div className="pedestrian-route-main-container">

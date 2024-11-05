@@ -10,11 +10,16 @@ const DropDown = () => {
     nav("/between-user-path");
   };
 
+  // 준비 중인 기능들 처리
+  const ontheAnvil = () => {
+    alert("준비 중 입니다.");
+  }
+
   return (
     <div className="menu-container">
       <div className="menu-profile">
         <div className="menu-profile-img">
-          <img src={person_img} />
+          <img onClick={ontheAnvil} src={person_img} />
         </div>
         <div className="menu-profile-user">
           <p style={{ fontSize: "15px", marginBottom: "5px" }}>
@@ -24,9 +29,9 @@ const DropDown = () => {
         </div>
       </div>
       <div className="menu-list">
-        <div>로그아웃</div>
+        <div onClick={ontheAnvil}>로그아웃</div>
         <div onClick={goUserPath}>사용자 간 경로</div>
-        <div>설정</div>
+        <div onClick={ontheAnvil}>설정</div>
       </div>
     </div>
   );
