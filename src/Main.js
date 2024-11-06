@@ -27,7 +27,7 @@ const Main = () => {
         center: defaultLocation,
         width: "100vw",
         height: "100vh",
-        zoom: 15,
+        zoom: 16,
         zoomControl: true,
         scrollwheel: true,
         httpsMode: true,
