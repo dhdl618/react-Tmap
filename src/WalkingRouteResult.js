@@ -19,13 +19,13 @@ const { Tmapv2 } = window;
 const WalkingRouteResult = () => {
     const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY
 
-    const {state: {poi}} = useLocation()
+    const {state: {poi, currentLocation}} = useLocation()
     console.log("정보가져오기", poi)
 
     const nav = useNavigate()
   
     const [map, setMap] = useState(null)
-    const [myCurrentLocation, setMyCurrentLocation] = useState(null)
+    const [myCurrentLocation, setMyCurrentLocation] = useState({lat: currentLocation?.lat, lng: currentLocation?.lng})
     const [destinationMarker, setDestinationMarker] = useState(null)
     const [currentMarker, setCurrentMarker] = useState(null)
     const [distance, setDistance] = useState(null)
@@ -105,7 +105,7 @@ const WalkingRouteResult = () => {
         );
       } else {
         map.setCenter(
-          new Tmapv2.LatLng(myCurrentLocation?.lat - 0.005, myCurrentLocation?.lng)
+          new Tmapv2.LatLng(myCurrentLocation?.lat - 0.0023, myCurrentLocation?.lng)
         );
       }
     }
