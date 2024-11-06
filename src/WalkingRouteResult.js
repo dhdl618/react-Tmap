@@ -133,6 +133,9 @@ const WalkingRouteResult = () => {
 
     useEffect(()=> {
         initDestinationMap()
+        const newLoc = new Tmapv2.LatLng(myCurrentLocation?.lat, myCurrentLocation?.lng);
+
+        currentMarker.setPosition(newLoc);
     },[])
 
     // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트 (지도 및 마커용)
