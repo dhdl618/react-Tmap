@@ -563,7 +563,8 @@ const BtwPedestrianRoute = () => {
 
       if (
         TTSdescript?.descript !== undefined &&
-        TTSdescript?.descript !== lastDescript
+        TTSdescript?.descript !== lastDescript &&
+        lastDescript !== "상대방 위치에 도착하였습니다. 안내를 종료합니다."
       ) {
         sendToTTS(TTSdescript.descript);
         setLastDescript(TTSdescript.descript);
@@ -761,13 +762,13 @@ const BtwPedestrianRoute = () => {
       const text = "상대방 위치에 도착하였습니다. 안내를 종료합니다."
       
       if (text !== lastDescript) {
-        sendToTTS(text);
         setLastDescript(text);
+        sendToTTS(text);
       }
 
       setIsArrived(true);
     }
-  }, [realTimeLocation, othersRealTimeLocation]);
+  }, [realTimeLocation, othersRealTimeLocation, lastDescript]);
 
   return (
     <div className="pedestrian-route-main-container">
