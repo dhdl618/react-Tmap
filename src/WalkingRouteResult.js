@@ -19,13 +19,13 @@ const { Tmapv2 } = window;
 const WalkingRouteResult = () => {
     const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY
 
-    const {state: {poi, currentLocation}} = useLocation()
+    const {state: {poi}} = useLocation()
     console.log("정보가져오기", poi)
 
     const nav = useNavigate()
   
     const [map, setMap] = useState(null)
-    const [myCurrentLocation, setMyCurrentLocation] = useState({lat: currentLocation?.lat, lng: currentLocation?.lng})
+    const [myCurrentLocation, setMyCurrentLocation] = useState(null)
     const [destinationMarker, setDestinationMarker] = useState(null)
     const [currentMarker, setCurrentMarker] = useState(null)
     const [distance, setDistance] = useState(null)
@@ -135,12 +135,6 @@ const WalkingRouteResult = () => {
         initDestinationMap()
     },[])
 
-    useEffect(() => {
-      const newLoc = new Tmapv2.LatLng(myCurrentLocation?.lat, myCurrentLocation?.lng);
-
-      currentMarker.setPosition(newLoc);
-    }, [map])
-
     // 웹뷰에서 메시지를 받을 때마다 위치를 업데이트 (지도 및 마커용)
     useEffect(() => {
         const handleMessage = (e) => {
@@ -174,7 +168,7 @@ const WalkingRouteResult = () => {
       }, [myCurrentLocation]);
 
       const goPedestrianRoute = (e) => {
-        if(myCurrentLocation && map && currentMarker) {
+        if(myCurrentLocation) {
           nav('/pedestrian-route', {state : {myCurrentLocation, poi}})
         }
       }
