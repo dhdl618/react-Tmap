@@ -121,7 +121,7 @@ const SearchResult = () => {
 
   const searchRouteResult = (poi) => {
     // console.log("정보", poi)
-    nav(`/poi-route-result/${poiKeyword}`, { state: { poi } });
+    nav(`/poi-route-result/${poiKeyword}`, { state: { poi, currentLocation } });
   };
 
   return (

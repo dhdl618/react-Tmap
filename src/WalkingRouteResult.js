@@ -168,7 +168,7 @@ const WalkingRouteResult = () => {
       }, [myCurrentLocation]);
 
       const goPedestrianRoute = (e) => {
-        if(myCurrentLocation) {
+        if(myCurrentLocation && map) {
           nav('/pedestrian-route', {state : {myCurrentLocation, poi}})
         }
       }
