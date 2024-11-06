@@ -759,7 +759,11 @@ const BtwPedestrianRoute = () => {
       realTimeLocation?.lng <= lng_diff_plus
     ) {
       const text = "상대방 위치에 도착하였습니다. 안내를 종료합니다."
-      sendToTTS(text)
+      
+      if (text !== lastDescript) {
+        sendToTTS(text);
+        setLastDescript(text);
+      }
 
       setIsArrived(true);
     }
