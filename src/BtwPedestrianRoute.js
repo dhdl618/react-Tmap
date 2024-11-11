@@ -551,7 +551,7 @@ const BtwPedestrianRoute = () => {
 
   // 파싱 데이터를 이용해서 TTS 호출
   const [isTTSAllowed, setIsTTSAllowed] = useState(false);
-  const [lastDescript, setLastDescript] = useState(null);
+  const [lastDescript, setLastDescript] = useState([]);
 
   const TTSRef = useRef(null);
 
@@ -563,11 +563,11 @@ const BtwPedestrianRoute = () => {
 
       if (
         TTSdescript?.descript !== undefined &&
-        TTSdescript?.descript !== lastDescript &&
+        !lastDescript.includes(TTSdescript?.descript) &&
         lastDescript !== "상대방 위치에 도착하였습니다. 안내를 종료합니다."
       ) {
         sendToTTS(TTSdescript.descript);
-        setLastDescript(TTSdescript.descript);
+        setLastDescript((prev) => [...prev, TTSdescript.descript]);
       } else {
         // alert("디스크립션 undefined")
       }
@@ -761,8 +761,8 @@ const BtwPedestrianRoute = () => {
     ) {
       const text = "상대방 위치에 도착하였습니다. 안내를 종료합니다."
       
-      if (text !== lastDescript) {
-        setLastDescript(text);
+      if (!lastDescript.includes(text)) {
+        setLastDescript((prev) => [...prev, text])
         sendToTTS(text);
       }
 
