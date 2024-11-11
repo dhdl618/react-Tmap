@@ -539,8 +539,7 @@ const PedestrianRoute = () => {
 
   // 파싱 데이터를 이용해서 TTS 호출
   const [isTTSAllowed, setIsTTSAllowed] = useState(false);
-  const [lastDescript, setLastDescript] = useState(null);
-  const [isFirstTTS, setIsFirstTTS] = useState(null);
+  const [lastDescript, setLastDescript] = useState([]);
 
   const TTSRef = useRef(null);
 
@@ -552,12 +551,10 @@ const PedestrianRoute = () => {
 
       if (
         TTSdescript?.descript !== undefined &&
-        TTSdescript?.descript !== lastDescript
+        !lastDescript.includes(TTSdescript?.descript)
       ) {
         sendToTTS(TTSdescript.descript);
-        setLastDescript(TTSdescript.descript);
-      } else {
-        // alert("디스크립션 undefined")
+        setLastDescript((prev) => [...prev, TTSdescript.descript]);
       }
     }
   }, [realTimeLocation, isTTSAllowed]);

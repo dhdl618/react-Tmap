@@ -311,6 +311,9 @@ const ConsoleTest = () => {
     <button onClick={updateMyLoc}>내 위치 갱신</button>
     <button onClick={deleteID}>내 ID 삭제</button>
     <button onClick={shortRoute}>안심경로</button>
+    {safeRef.current.map((value)=> {
+      <p>{value}</p>
+    })}
   </div>;
 };
 
